@@ -21,8 +21,6 @@ include $(CCSP_ROOT_DIR)/arch/ccsp_common.mk
 #	Set up include directories
 #
 
-INCPATH += $(CCSP_ROOT_DIR)/hal/include
-
 CFLAGS += $(addprefix -I, $(INCPATH))
 
 
