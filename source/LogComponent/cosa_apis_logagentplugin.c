@@ -2,6 +2,7 @@
 #include "ansc_platform.h"
 #include "cosa_apis_logagentplugin.h"
 #include "ccsp_trace.h"
+#include "ccsp_syslog.h"
 
 #define TR069_PROC_NAME "CcspTr069PaSsp"
 #define MTA_PROC_NAME "CcspMtaAgentSsp"
@@ -392,6 +393,13 @@ LogAgent_SetParamStringValue
 	   
         return TRUE;
 		
+    }
+    if( AnscEqualString(ParamName, "WifiEventLogMsg", TRUE))
+    {
+	strcpy (LogLevel, pString);
+	strtok_r (LogLevel, ",",&LogMsg);
+        syslog_eventlog("Wifi", LOG_NOTICE, LogMsg);
+        return TRUE;
     }
 
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
