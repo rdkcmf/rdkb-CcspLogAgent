@@ -24,6 +24,7 @@
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
 
+#define DEBUG_INI_NAME "/etc/debug.ini"
 extern char*                                pComponentName;
 char                                        g_Subsystem[32]         = {0};
 
@@ -348,7 +349,8 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Cdm_Init: %s\n", Cdm_StrError(err));
         exit(1);
     }
-    rdk_logger_init("/fss/gw/lib/debug.ini");
+    //rdk_logger_init("/fss/gw/lib/debug.ini");
+    rdk_logger_init(DEBUG_INI_NAME);
     system("touch /tmp/logagent_initialized");
 
     if ( bRunAsDaemon )
