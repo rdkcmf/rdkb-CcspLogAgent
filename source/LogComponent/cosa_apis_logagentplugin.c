@@ -10,13 +10,15 @@
 #define PSM_PROC_NAME "PsmSsp"
 #define PAM_PROC_NAME "CcspPandMSsp"
 #define WIFI_PROC_NAME "wifilog_agent"
+#define Harvester_PROC_NAME "harvester"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
 _COSA_PLUGIN_SAMPLE_INFO
 {
     ULONG                           loglevel; 
-    char                            WifiLogMsg[256];   
+    char                            WifiLogMsg[256];
+    char 			    HarvesterLogMsg[256];   //Added for RDKB-4343
    
 }
 COSA_PLUGIN_SAMPLE_INFO,  *PCOSA_PLUGIN_SAMPLE_INFO;
@@ -71,12 +73,18 @@ LogAgent_GetParamUlongValue
     )
 {
     ULONG                           i               = 0;
-
-if( AnscEqualString(ParamName, "loglevel", TRUE))
-{
+    //printf("$$$$Inside LogAgent_GetParamUlongValue in cosa_apis_logagentplugin.c\n");
+	/*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
+/*
+	if( AnscEqualString(ParamName, "loglevel", TRUE))
+    {
+	 //printf("$$$$Inside LogAgent_GetParamUlongValue loglevel\n");
         *puLong =  &i;
+	 //printf("$$$$puLong = %d\n",*puLong);
+	return TRUE;
    
-}
+    }*/
+
 if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
 {
 		*puLong  = RDKLogLevel;
@@ -84,8 +92,8 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
 }
 if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
 {
-	printf("Inside LogAgent_GetParamUlongValue TR069LogLevel\n");
-    *puLong =  TR69_RDKLogLevel;
+        *puLong =  TR69_RDKLogLevel;
+		return TRUE;
    
 }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
@@ -118,6 +126,13 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
 		*puLong  = CR_RDKLogLevel;
         return TRUE;
     }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+    {
+	
+		*puLong  = Harvester_RDKLogLevel;
+        return TRUE;
+    }
+	
     return FALSE;
 }
 
@@ -168,12 +183,16 @@ LogAgent_SetParamUlongValue
     )
 {
     ULONG                           i               = 0;
-
+	/*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
+/*
 	if( AnscEqualString(ParamName, "loglevel", TRUE))
 	{
-		printf(" LogAgent_SetParamValues : loglevel \n");
+		//printf(" LogAgent_SetParamValues : loglevel \n");
+		return TRUE;
 	  
-	} 
+	}
+*/
+
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
     {
 		char buf[8];
@@ -323,6 +342,29 @@ LogAgent_SetParamUlongValue
 		}
 		return TRUE;
     }
+
+/*Added for RDKB-4343*/
+if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+    {
+		char buf[8];
+		Harvester_RDKLogLevel = uValue;
+		printf("Setting Harvester_RDKLogLevel to %d\n",Harvester_RDKLogLevel);
+		snprintf(buf,sizeof(buf),"%d",uValue);
+		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf) != 0) 
+		{
+			AnscTraceWarning(("syscfg_set failed\n"));
+			printf("syscfg_set failed\n");
+		}
+		else 
+		{
+			if (syscfg_commit() != 0) 
+			{
+				AnscTraceWarning(("syscfg_commit failed\n"));
+				printf("syscfg_commit failed\n");
+			}
+		}
+		return TRUE;
+    }
     return FALSE;
 }
 
@@ -340,11 +382,12 @@ LogAgent_SetParamStringValue
 	char LogLevel[100] = {0};
 	int level = 0;
 	char WiFiLogeComponent[100] = "com.cisco.spvtg.ccsp.logagent";
+	char HarvesterLogeComponent[100] = "harvester";
 	
     /* check the parameter name and set the corresponding value */
     if( AnscEqualString(ParamName, "WifiLogMsg", TRUE))
     {
-     
+	//printf("$$$$Inside LogAgent_SetParamStringValue for WifiLogMsg \n");
 	strcpy (LogLevel, pString);
 	strtok_r (LogLevel, ",",&LogMsg);
 
@@ -394,11 +437,76 @@ LogAgent_SetParamStringValue
         return TRUE;
 		
     }
+
+/*Added for RDKB-4343*/
+   if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
+     {
+	//printf("$$$$Inside LogAgent_SetParamStringValue for HarvesterLogMsg \n");
+     	strcpy (LogLevel, pString);
+	strtok_r (LogLevel, ",",&LogMsg);
+
+	if( AnscEqualString(LogLevel, "RDK_LOG_ERROR", TRUE))
+	{
+	
+		level = RDK_LOG_ERROR;
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_ERROR,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_WARN", TRUE))
+	{
+	
+		level = RDK_LOG_WARN;		
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_WARN,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_NOTICE", TRUE))
+	{
+	
+		level = RDK_LOG_NOTICE;	
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_NOTICE,(LogMsg));
+	}
+	   else if( AnscEqualString(LogLevel, "RDK_LOG_INFO", TRUE))
+	{
+	
+		level = RDK_LOG_INFO;
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_INFO,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_DEBUG", TRUE))
+	{
+	
+		level = RDK_LOG_DEBUG;
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_DEBUG,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_FATAL", TRUE))
+	{
+	
+		level = RDK_LOG_FATAL;
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_FATAL,(LogMsg));
+	}
+	else
+	{	
+	
+		level = RDK_LOG_INFO;
+		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_INFO,(LogMsg));
+	}
+	   
+        return TRUE;
+		
+    }
+/*changes end here*/
     if( AnscEqualString(ParamName, "WifiEventLogMsg", TRUE))
     {
+	//printf("$$$$Inside WifiEventLogMsg\n");
 	strcpy (LogLevel, pString);
 	strtok_r (LogLevel, ",",&LogMsg);
         syslog_eventlog("Wifi", LOG_NOTICE, LogMsg);
+        return TRUE;
+    }
+
+    if( AnscEqualString(ParamName, "HarvesterEventLogMsg", TRUE))
+    {
+	//printf("$$$$Inside HarvesterEventLogMsg\n");
+	strcpy (LogLevel, pString);
+	strtok_r (LogLevel, ",",&LogMsg);
+        syslog_eventlog("Harvester", LOG_NOTICE, LogMsg);
         return TRUE;
     }
 
@@ -421,13 +529,39 @@ LogAgent_GetParamStringValue
     /* check the parameter name and set the corresponding value */
     if( AnscEqualString(ParamName, "WifiLogMsg", TRUE))
     {
-
+        //printf("$$$$ Inside LogAgent_GetParamStringValue for WiFiLogMsg\n");
+		AnscCopyString(str, "WiFiLogMsg");
         AnscCopyString(pValue, str);
-        return TRUE;
+        return 0;
+    }
+/*Added for rdkb-4343*/
+    if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
+    {
+        //printf("$$$$ Inside LogAgent_GetParamStringValue for HarvesterLogMsg\n");
+		AnscCopyString(str, "HarvesterLogMsg");
+        AnscCopyString(pValue, str);
+        return 0;
     }
 
+/*rdkb-4776*/
+    if( AnscEqualString(ParamName, "WifiEventLogMsg", TRUE))
+    {
+	//printf("$$$$Inside WifiEventLogMsg Returning true\n");
+        AnscCopyString(str, "WifiEventLogMsg");
+        AnscCopyString(pValue, str);
+        return 0;
+    }
+
+    if( AnscEqualString(ParamName, "HarvesterEventLogMsg", TRUE))
+    {
+	//printf("$$$$Inside HarvesterEventLogMsg Returning true\n");
+        AnscCopyString(str, "HarvesterEventLogMsg");
+        AnscCopyString(pValue, str);
+        return 0;
+    }
+/*changes end here*/
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
-    return FALSE;
+    return -1;
 }
 
 /**********************************************************************  
@@ -508,6 +642,12 @@ LogAgent_GetParamBoolValue
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
     {
 		*pBool  = CR_RDKLogEnable;
+        return TRUE;
+    }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
+    {
+	
+		*pBool  = Harvester_RDKLogEnable;
         return TRUE;
     }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
@@ -677,6 +817,27 @@ LogAgent_SetParamBoolValue
 			if (syscfg_commit() != 0) 
 			{
 			 	AnscTraceWarning(("syscfg_commit failed\n"));
+			}
+		}
+		return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
+    {
+		char buf[8];
+		Harvester_RDKLogEnable = bValue;
+		printf("$$$$ Harvester_RDKLogEnable = %d\n",Harvester_RDKLogEnable);
+		snprintf(buf,sizeof(buf),"%d",bValue);
+		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", buf) != 0) 
+		{
+		 	AnscTraceWarning(("syscfg_set failed\n"));
+			printf("syscfg_set failed\n");
+		}
+		else 
+		{
+			if (syscfg_commit() != 0) 
+			{
+			 	AnscTraceWarning(("syscfg_commit failed\n"));
+				printf("syscfg_commit failed\n");
 			}
 		}
 		return TRUE;

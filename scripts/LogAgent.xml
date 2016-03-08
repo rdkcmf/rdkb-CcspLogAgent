@@ -18,18 +18,28 @@
 	<func_SetParamBoolValue>LogAgent_SetParamBoolValue</func_SetParamBoolValue>
       </functions>
       <parameters>
-        <parameter>
+<!--Changed for RDKB-4800-->
+        <!--<parameter>
           <name>loglevel</name>
           <type>unsignedInt</type>
           <syntax>uint32</syntax>
           <writable>true</writable>
-        </parameter>
+        </parameter>-->
+<!--Changes end here-->
 	<parameter>
 	  <name>WifiLogMsg</name>  
 	  <type>string</type>	          
 	  <syntax>string</syntax>
 	  <writable>true</writable>                             
         </parameter>
+	<!-- For RDKB-4343-->
+	<parameter>
+	  <name>HarvesterLogMsg</name>  
+	  <type>string</type>	          
+	  <syntax>string</syntax>
+	  <writable>true</writable>                             
+        </parameter>
+	<!-- Changes end here -->
 		<parameter>
 			<name>X_RDKCENTRAL-COM_LogLevel</name>  
 			<type>unsignedInt</type>
@@ -126,13 +136,34 @@
 			<syntax>bool</syntax>
 			<writable>true</writable>                           
         </parameter>
+<!-- Added by Ash for RDKB-4343 -->
+			<parameter>
+			<name>X_RDKCENTRAL-COM_Harvester_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_Harvester_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+<!-- Changes end here -->
 			<parameter>
 			<name>WifiEventLogMsg</name>  
 			<type>string</type>
 			<syntax>string</syntax>
 			<writable>true</writable>                           
         </parameter>
-
+	<!-- For RDKB-4343-->
+			<parameter>
+			<name>HarvesterEventLogMsg</name>  
+			<type>string</type>
+			<syntax>string</syntax>
+			<writable>true</writable>                           
+        </parameter>
+<!-- Changes end here -->
       </parameters>
     </object>
  </objects>

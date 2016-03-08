@@ -278,6 +278,19 @@ void ReadLogInfo()
     		{
     		    CR_RDKLogEnable = (BOOL)atoi(buf);
     		}
+
+/*Added for RDKB-4343*/
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf, sizeof(buf));
+    	if( buf != NULL )
+    		{
+    		    Harvester_RDKLogLevel = atoi(buf);
+    		}
+		syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", buf, sizeof(buf));
+    	if( buf != NULL )
+    		{
+    		    Harvester_RDKLogEnable = (BOOL)atoi(buf);
+    		}
+/*changes end here*/
 	
 }
 int main(int argc, char* argv[])
