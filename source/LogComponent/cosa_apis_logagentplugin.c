@@ -11,6 +11,7 @@
 #define PAM_PROC_NAME "CcspPandMSsp"
 #define WIFI_PROC_NAME "wifilog_agent"
 #define Harvester_PROC_NAME "harvester"
+#define NOTIFY_PROC_NAME "NotifyComp"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -130,6 +131,12 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
     {
 	
 		*puLong  = Harvester_RDKLogLevel;
+        return TRUE;
+    }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
+    {
+	
+		*puLong  = NOTIFY_RDKLogLevel;
         return TRUE;
     }
 	
@@ -363,6 +370,25 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
 				printf("syscfg_commit failed\n");
 			}
 		}
+		return TRUE;
+    }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
+    {
+		char buf[8];
+		NOTIFY_RDKLogLevel = uValue;
+	    snprintf(buf,sizeof(buf),"%d",uValue);
+		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf) != 0) 
+		{
+			AnscTraceWarning(("syscfg_set failed\n"));
+		}
+		else 
+		{
+			if (syscfg_commit() != 0) 
+			{
+		    	 AnscTraceWarning(("syscfg_commit failed\n"));
+			}
+		}
+		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
     return FALSE;
@@ -650,6 +676,11 @@ LogAgent_GetParamBoolValue
 		*pBool  = Harvester_RDKLogEnable;
         return TRUE;
     }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
+    {
+		*pBool  = NOTIFY_RDKLogEnable;
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -687,6 +718,8 @@ LogAgent_SetParamBoolValue
 		SendSignal(PSM_PROC_NAME);
 		SW_Dealy();
 		SendSignal(PAM_PROC_NAME);
+		SW_Dealy();
+		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -840,6 +873,25 @@ LogAgent_SetParamBoolValue
 				printf("syscfg_commit failed\n");
 			}
 		}
+		return TRUE;
+    }
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
+    {
+		char buf[8];
+		NOTIFY_RDKLogEnable = bValue;
+	    snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", buf) != 0) 
+		{
+             AnscTraceWarning(("syscfg_set failed\n"));
+		}
+		else 
+		{
+			 if (syscfg_commit() != 0) 
+			 {
+				 AnscTraceWarning(("syscfg_commit failed\n"));
+			 }
+		}
+		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
