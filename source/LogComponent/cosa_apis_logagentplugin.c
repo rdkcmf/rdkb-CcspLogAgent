@@ -11,7 +11,7 @@
 #define PAM_PROC_NAME "CcspPandMSsp"
 #define WIFI_PROC_NAME "wifilog_agent"
 #define Harvester_PROC_NAME "harvester"
-#define NOTIFY_PROC_NAME "NotifyComp"
+#define NOTIFY_PROC_NAME "notify_comp"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct

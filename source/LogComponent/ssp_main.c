@@ -291,6 +291,16 @@ void ReadLogInfo()
     		    Harvester_RDKLogEnable = (BOOL)atoi(buf);
     		}
 /*changes end here*/
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+                {
+                    NOTIFY_RDKLogLevel = atoi(buf);
+                }
+                syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+                {
+                    NOTIFY_RDKLogEnable = (BOOL)atoi(buf);
+                }
 	
 }
 int main(int argc, char* argv[])
