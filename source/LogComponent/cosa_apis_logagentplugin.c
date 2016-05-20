@@ -12,6 +12,7 @@
 #define WIFI_PROC_NAME "wifilog_agent"
 #define Harvester_PROC_NAME "harvester"
 #define NOTIFY_PROC_NAME "notify_comp"
+#define WECB_PROC_NAME "CcspWecbController"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -140,6 +141,13 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         return TRUE;
     }
 	
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LogLevel", TRUE))
+    {
+	
+		*puLong  = WECB_RDKLogLevel;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -391,6 +399,27 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
+
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LogLevel", TRUE))
+    {
+		char buf[8]={ 0 };
+		WECB_RDKLogLevel = uValue;
+	    snprintf(buf,sizeof(buf),"%d",uValue);
+		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Wecb_LogLevel", buf) != 0) 
+		{
+			AnscTraceWarning(("syscfg_set failed\n"));
+		}
+		else 
+		{
+			if (syscfg_commit() != 0) 
+			{
+		    	 AnscTraceWarning(("syscfg_commit failed\n"));
+			}
+		}
+		SendSignal(WECB_PROC_NAME);
+		return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -681,6 +710,13 @@ LogAgent_GetParamBoolValue
 		*pBool  = NOTIFY_RDKLogEnable;
         return TRUE;
     }
+
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", TRUE))
+    {
+		*pBool  = WECB_RDKLogEnable;
+        return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -720,6 +756,8 @@ LogAgent_SetParamBoolValue
 		SendSignal(PAM_PROC_NAME);
 		SW_Dealy();
 		SendSignal(NOTIFY_PROC_NAME);
+		SW_Dealy();
+		SendSignal(WECB_PROC_NAME);
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -894,6 +932,27 @@ LogAgent_SetParamBoolValue
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
+
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", TRUE))
+    {
+		char buf[8];
+		WECB_RDKLogEnable = bValue;
+	    snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", buf) != 0) 
+		{
+             AnscTraceWarning(("syscfg_set failed\n"));
+		}
+		else 
+		{
+			 if (syscfg_commit() != 0) 
+			 {
+				 AnscTraceWarning(("syscfg_commit failed\n"));
+			 }
+		}
+		SendSignal(WECB_PROC_NAME);
+		return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }

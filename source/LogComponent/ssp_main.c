@@ -301,6 +301,18 @@ void ReadLogInfo()
                 {
                     NOTIFY_RDKLogEnable = (BOOL)atoi(buf);
                 }
+		
+		syscfg_get( NULL, "X_RDKCENTRAL-COM_Wecb_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            WECB_RDKLogLevel = atoi(buf);
+        }
+
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            WECB_RDKLogEnable = (BOOL)atoi(buf);
+        }
 	
 }
 int main(int argc, char* argv[])
