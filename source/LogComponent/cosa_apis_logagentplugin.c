@@ -13,6 +13,8 @@
 #define Harvester_PROC_NAME "harvester"
 #define NOTIFY_PROC_NAME "notify_comp"
 #define WECB_PROC_NAME "CcspWecbController"
+#define WECBMASTER_PROC_NAME "wecb_master"
+
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -417,6 +419,8 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
 			}
 		}
 		SendSignal(WECB_PROC_NAME);
+		SW_Dealy();
+		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
     }
 
@@ -758,6 +762,8 @@ LogAgent_SetParamBoolValue
 		SendSignal(NOTIFY_PROC_NAME);
 		SW_Dealy();
 		SendSignal(WECB_PROC_NAME);
+		SW_Dealy();
+		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -950,6 +956,8 @@ LogAgent_SetParamBoolValue
 			 }
 		}
 		SendSignal(WECB_PROC_NAME);
+		SW_Dealy();
+		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
     }
 
