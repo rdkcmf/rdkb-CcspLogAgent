@@ -436,9 +436,9 @@ LogAgent_SetParamStringValue
         char*                       pString
     )
 {
-	char LogMsg_arr[300] = {0};
+	char LogMsg_arr[512] = {0};
 	char *LogMsg = LogMsg_arr;
-	char LogLevel[100] = {0};
+	char LogLevel[512] = {0};
 	int level = 0;
 	char WiFiLogeComponent[100] = "com.cisco.spvtg.ccsp.logagent";
 	char HarvesterLogeComponent[100] = "harvester";
