@@ -34,6 +34,24 @@ dnl checks for dependencies
 dnl **********************************
 AC_HEADER_STDC
 
+SYSTEMD_CFLAGS=" "
+SYSTEMD_LDFLAGS=" "
+
+AC_ARG_ENABLE([notify],
+        AS_HELP_STRING([--enable-notify],[enable systemd notify]),
+        [
+          case "${enableval}" in
+           yes) SYSTEMD_CFLAGS="-DENABLE_SD_NOTIFY"
+                SYSTEMD_LDFLAGS="-lsystemd" ;;
+           no) AC_MSG_ERROR([systemd notify is disabled]) ;;
+          *) AC_MSG_ERROR([bad value ${enableval} for --enable-notify ]) ;;
+           esac
+           ],
+         [echo "systemd notify is disabled."])
+
+
+AC_SUBST(SYSTEMD_CFLAGS)
+AC_SUBST(SYSTEMD_LDFLAGS)
 dnl Checks for header files.
 AC_CHECK_HEADERS([limits.h memory.h stdlib.h string.h sys/socket.h unistd.h])
 
