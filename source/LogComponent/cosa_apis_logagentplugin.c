@@ -16,13 +16,20 @@
 #define WECBMASTER_PROC_NAME "wecb_master"
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
 
+/*RDKB-7469, CID-33124, defines*/
+#define LOGAGENT_MAX_MSG_LENGTH    256
+#define LOGAGENT_MAX_BUF_SIZE      241
+#define LOGAGENT_MAX_COMMAND_LEN   256
+#define LOGAGENT_PROC_NAME_LEN     50
+#define LOGAGENT_MAX_READ_SIZE     120
+
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
 _COSA_PLUGIN_SAMPLE_INFO
 {
     ULONG                           loglevel; 
-    char                            WifiLogMsg[256];
-    char 			    HarvesterLogMsg[256];   //Added for RDKB-4343
+    char                            WifiLogMsg[LOGAGENT_MAX_MSG_LENGTH];
+    char 			    HarvesterLogMsg[LOGAGENT_MAX_MSG_LENGTH];   //Added for RDKB-4343
    
 }
 COSA_PLUGIN_SAMPLE_INFO,  *PCOSA_PLUGIN_SAMPLE_INFO;
@@ -38,11 +45,14 @@ void SW_Dealy()
 static int SendSignal(char *proc)
 {
     FILE *f;
-	char Buf[50] = {0};
+    char Buf[LOGAGENT_MAX_BUF_SIZE] = {0};
     char *ptr = Buf;
-	char cmd[50] = {0};
-	char cmd2[50] = {0};
-	sprintf(cmd,"%s %s","pidof ",proc);
+    char cmd[LOGAGENT_PROC_NAME_LEN] = {0};
+    char cmd2[LOGAGENT_MAX_COMMAND_LEN] = {0};
+    unsigned int iBufferRead = 0;
+    snprintf(cmd,sizeof(cmd)-1,"%s %s","pidof ",proc);
+
+
     if((f = popen(cmd, "r")) == NULL) {
         printf("popen %s error\n", cmd);
         return -1;
@@ -51,20 +61,25 @@ static int SendSignal(char *proc)
     while(!feof(f))
     {
         *ptr = 0;
-        fgets(ptr,120,f);
-        if(strlen(ptr) == 0)
+        fgets(ptr,LOGAGENT_MAX_READ_SIZE,f);
+        iBufferRead += strlen(ptr);
+        /*
+        ** RDKB-7469, CID-33124, break if length read more than buffer size 
+        ** This is to avoid memory curruption
+        */
+        if((strlen(ptr) == 0) || (iBufferRead >(LOGAGENT_MAX_BUF_SIZE-1)) )
         {
             break;
         }
         ptr += strlen(ptr);
     }
     pclose(f);
-	sprintf(cmd2,"%s %s","kill -14 ",Buf);
+    snprintf(cmd2,sizeof(cmd2)-1,"%s %s","kill -14 ", Buf); /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
     if((f = popen(cmd2, "r")) == NULL) {
-        printf("popen %s error\n", cmd);
+        printf("popen %s error\n", cmd2);
         return -1;
     }
-	  pclose(f);
+	pclose(f);
     return 0;
 }
 
