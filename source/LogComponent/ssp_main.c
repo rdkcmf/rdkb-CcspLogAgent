@@ -25,6 +25,11 @@
 #include "ccsp_dm_api.h"
 
 #define DEBUG_INI_NAME "/etc/debug.ini"
+
+#ifdef ENABLE_SD_NOTIFY
+#include <systemd/sd-daemon.h>
+#endif
+
 extern char*                                pComponentName;
 char                                        g_Subsystem[32]         = {0};
 
@@ -321,6 +326,8 @@ int main(int argc, char* argv[])
     BOOL                            bRunAsDaemon       = TRUE;
     int                             cmdChar            = 0;
     int                             idx = 0;
+	char                            cmd[1024]          = {0};
+    FILE                           *fd                 = NULL;
 
     extern ANSC_HANDLE bus_handle;
     char *subSys            = NULL;  
@@ -356,6 +363,19 @@ int main(int argc, char* argv[])
 #elif defined(_ANSC_LINUX)
     if ( bRunAsDaemon ) 
         daemonize();
+	
+	fd = fopen("/var/tmp/log_agent.pid", "w+");
+    if ( !fd )
+    {
+        CcspTraceWarning(("Create /var/tmp/log_agent.pid error. \n"));
+        return 1;
+    }
+    else
+    {
+        sprintf(cmd, "%d", getpid());
+        fputs(cmd, fd);
+        fclose(fd);
+    }
 
     signal(SIGTERM, sig_handler);
     signal(SIGINT, sig_handler);
@@ -386,6 +406,15 @@ int main(int argc, char* argv[])
     }
     //rdk_logger_init("/fss/gw/lib/debug.ini");
     rdk_logger_init(DEBUG_INI_NAME);
+	
+#ifdef ENABLE_SD_NOTIFY
+    sd_notifyf(0, "READY=1\n"
+              "STATUS=log_agent is Successfully Initialized\n"
+              "MAINPID=%lu", (unsigned long) getpid());
+  
+    CcspTraceInfo(("RDKB_SYSTEM_BOOT_UP_LOG : log_agent sd_notify Called\n"));
+#endif
+	
     system("touch /tmp/logagent_initialized");
 
     if ( bRunAsDaemon )
