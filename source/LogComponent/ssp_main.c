@@ -318,7 +318,17 @@ void ReadLogInfo()
         {
             WECB_RDKLogEnable = (BOOL)atoi(buf);
         }
-	
+
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PWRMGR_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PWRMGR_RDKLogEnable = (BOOL)atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {

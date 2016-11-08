@@ -14,7 +14,7 @@
 #define NOTIFY_PROC_NAME "notify_comp"
 #define WECB_PROC_NAME "CcspWecbController"
 #define WECBMASTER_PROC_NAME "wecb_master"
-
+#define PWRMGR_PROC_NAME "rdkbPowerManager"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -150,6 +150,12 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+    {
+
+        *puLong  = PWRMGR_RDKLogLevel;
+        return TRUE;
+    }
     return FALSE;
 }
 
@@ -424,6 +430,25 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
 		return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        PWRMGR_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(PWRMGR_PROC_NAME);
+        return TRUE;
+    }
     return FALSE;
 }
 
@@ -721,6 +746,11 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
+    {
+        *pBool  = PWRMGR_RDKLogEnable;
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -763,7 +793,9 @@ LogAgent_SetParamBoolValue
 		SW_Dealy();
 		SendSignal(WECB_PROC_NAME);
 		SW_Dealy();
-		SendSignal(WECBMASTER_PROC_NAME);		
+		SendSignal(WECBMASTER_PROC_NAME);
+        SW_Dealy();
+        SendSignal(PWRMGR_PROC_NAME);
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -959,6 +991,26 @@ LogAgent_SetParamBoolValue
 		SW_Dealy();
 		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
+    }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        PWRMGR_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", buf) != 0)
+        {
+             AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+             if (syscfg_commit() != 0)
+             {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+             }
+        }
+        SendSignal(PWRMGR_PROC_NAME);
+        return TRUE;
     }
 
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
