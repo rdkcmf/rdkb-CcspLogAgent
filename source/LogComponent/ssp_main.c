@@ -329,6 +329,17 @@ void ReadLogInfo()
         {
             PWRMGR_RDKLogEnable = (BOOL)atoi(buf);
         }
+
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FSC_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FSC_RDKLogEnable = (BOOL)atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {

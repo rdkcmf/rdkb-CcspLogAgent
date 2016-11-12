@@ -15,6 +15,7 @@
 #define WECB_PROC_NAME "CcspWecbController"
 #define WECBMASTER_PROC_NAME "wecb_master"
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
+#define FSC_PROC_NAME "fscMonitor"
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -154,6 +155,12 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
     {
 
         *puLong  = PWRMGR_RDKLogLevel;
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+    {
+
+        *puLong  = FSC_RDKLogLevel;
         return TRUE;
     }
     return FALSE;
@@ -447,6 +454,26 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
             }
         }
         SendSignal(PWRMGR_PROC_NAME);
+        return TRUE;
+    }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        FSC_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(FSC_PROC_NAME);
         return TRUE;
     }
     return FALSE;
@@ -751,6 +778,12 @@ LogAgent_GetParamBoolValue
         *pBool  = PWRMGR_RDKLogEnable;
         return TRUE;
     }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
+    {
+        *pBool  = FSC_RDKLogEnable;
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -1010,6 +1043,26 @@ LogAgent_SetParamBoolValue
              }
         }
         SendSignal(PWRMGR_PROC_NAME);
+        return TRUE;
+    }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        FSC_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", buf) != 0)
+        {
+             AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+             if (syscfg_commit() != 0)
+             {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+             }
+        }
+        SendSignal(FSC_PROC_NAME);
         return TRUE;
     }
 
