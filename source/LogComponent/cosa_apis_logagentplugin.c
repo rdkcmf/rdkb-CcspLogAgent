@@ -18,6 +18,7 @@
 #define FSC_PROC_NAME "fscMonitor"
 #define MESH_PROC_NAME "meshAgent"
 #define MDC_PROC_NAME "CcspMdcSsp"
+#define ETHAGENT_PROC_NAME "CcspEthAgent"
 
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
@@ -521,6 +522,26 @@ LogAgent_SetParamUlongValue
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+    {
+                char buf[8];
+                ETHAGENT_RDKLogLevel = uValue;
+                snprintf(buf,sizeof(buf),"%d",uValue);
+                if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf) != 0)
+                {
+                        AnscTraceWarning(("syscfg_set failed\n"));
+                }
+                else
+                {
+                        if (syscfg_commit() != 0)
+                        {
+                                AnscTraceWarning(("syscfg_commit failed\n"));
+                        }
+                }
+                SendSignal(ETHAGENT_PROC_NAME);
+                return TRUE;
+    }
+
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
     {
         char buf[8]={ 0 };
@@ -1004,6 +1025,12 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 #endif
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    {
+        *pBool  = ETHAGENT_RDKLogEnable;
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -1049,6 +1076,8 @@ LogAgent_SetParamBoolValue
 		SendSignal(WECBMASTER_PROC_NAME);
         SW_Dealy();
         SendSignal(PWRMGR_PROC_NAME);
+		SW_Dealy();
+        SendSignal(ETHAGENT_PROC_NAME);
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -1346,6 +1375,27 @@ LogAgent_SetParamBoolValue
 		return TRUE;
     }
 #endif
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        ETHAGENT_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", buf) != 0)
+        {
+             AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+             if (syscfg_commit() != 0)
+             {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+             }
+        }
+        SendSignal(ETHAGENT_PROC_NAME);
+        return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
