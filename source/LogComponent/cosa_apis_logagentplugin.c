@@ -17,6 +17,7 @@
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
 #define FSC_PROC_NAME "fscMonitor"
 #define MESH_PROC_NAME "meshAgent"
+#define MDC_PROC_NAME "CcspMdcSsp"
 
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
@@ -24,15 +25,21 @@
 #define LOGAGENT_MAX_COMMAND_LEN   256
 #define LOGAGENT_PROC_NAME_LEN     50
 #define LOGAGENT_MAX_READ_SIZE     120
+#if defined(_MDC_SUPPORTED_)
+  #define MDC_PROC_NAME "CcspMdcSsp"
+#endif
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
 _COSA_PLUGIN_SAMPLE_INFO
 {
-    ULONG                           loglevel; 
+    ULONG                           loglevel;
     char                            WifiLogMsg[LOGAGENT_MAX_MSG_LENGTH];
     char 			    HarvesterLogMsg[LOGAGENT_MAX_MSG_LENGTH];   //Added for RDKB-4343
-   
+#if defined(_MDC_SUPPORTED_)
+    char 			    MdcLogMsg[LOGAGENT_MAX_MSG_LENGTH];   //Added for RDKB-4237
+#endif
+
 }
 COSA_PLUGIN_SAMPLE_INFO,  *PCOSA_PLUGIN_SAMPLE_INFO;
 
@@ -185,6 +192,15 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = MESH_RDKLogLevel;
         return TRUE;
     }
+
+
+#if defined(_MDC_SUPPORTED_)
+       if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LogLevel", TRUE))
+    {
+                *puLong  = MDC_RDKLogLevel;
+        return TRUE;
+    }
+#endif
 
     return FALSE;
 }
@@ -397,7 +413,7 @@ LogAgent_SetParamUlongValue
     }
 
 /*Added for RDKB-4343*/
-if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
     {
 		char buf[8];
 		Harvester_RDKLogLevel = uValue;
@@ -520,6 +536,31 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
         return TRUE;
     }
 
+#if defined(_MDC_SUPPORTED_)
+/*Added for RDKB-4989*/
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LogLevel", TRUE))
+    {
+                char buf[8];
+                MDC_RDKLogLevel = uValue;
+                printf("Setting MDC_RDKLogLevel to %d\n",MDC_RDKLogLevel);
+                snprintf(buf,sizeof(buf),"%d",uValue);
+                if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MDC_LogLevel", buf) != 0)
+                {
+                        AnscTraceWarning(("syscfg_set failed\n"));
+                        printf("syscfg_set failed\n");
+                }
+                else
+                {
+                        if (syscfg_commit() != 0)
+                        {
+                                AnscTraceWarning(("syscfg_commit failed\n"));
+                                printf("syscfg_commit failed\n");
+                        }
+                }
+                return TRUE;
+    }
+#endif
+
     return FALSE;
 }
 
@@ -537,8 +578,11 @@ LogAgent_SetParamStringValue
 	char LogLevel[512] = {0};
 	int level = 0;
 	char WiFiLogeComponent[100] = "com.cisco.spvtg.ccsp.logagent";
+#if defined(_MDC_SUPPORTED_)
+        char MdcLogeComponent[100] = "mdc";
+#endif
 	char HarvesterLogeComponent[100] = "harvester";
-	
+
     /* check the parameter name and set the corresponding value */
     if( AnscEqualString(ParamName, "WifiLogMsg", TRUE))
     {
@@ -590,8 +634,64 @@ LogAgent_SetParamStringValue
 	}
 	   
         return TRUE;
-		
+
     }
+#if defined(_MDC_SUPPORTED_)
+      /*Added for RDKB-4237*/
+   if( AnscEqualString(ParamName, "MdcLogMsg", TRUE))
+     {
+
+	strcpy (LogLevel, pString);
+	strtok_r (LogLevel, ",",&LogMsg);
+
+	if( AnscEqualString(LogLevel, "RDK_LOG_ERROR", TRUE))
+	{
+
+		level = RDK_LOG_ERROR;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_ERROR,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_WARN", TRUE))
+	{
+
+		level = RDK_LOG_WARN;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_WARN,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_NOTICE", TRUE))
+	{
+
+		level = RDK_LOG_NOTICE;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_NOTICE,(LogMsg));
+	}
+	   else if( AnscEqualString(LogLevel, "RDK_LOG_INFO", TRUE))
+	{
+
+		level = RDK_LOG_INFO;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_INFO,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_DEBUG", TRUE))
+	{
+
+		level = RDK_LOG_DEBUG;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_DEBUG,(LogMsg));
+	}
+	else if( AnscEqualString(LogLevel, "RDK_LOG_FATAL", TRUE))
+	{
+
+		level = RDK_LOG_FATAL;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_FATAL,(LogMsg));
+	}
+	else
+	{
+
+		level = RDK_LOG_INFO;
+		CcspTraceExec(MdcLogeComponent,RDK_LOG_INFO,(LogMsg));
+	}
+
+        return TRUE;
+
+    }
+/*changes end here*/
+#endif /* _MDC_SUPPORTED */
 
 /*Added for RDKB-4343*/
    if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
@@ -664,6 +764,17 @@ LogAgent_SetParamStringValue
         syslog_eventlog("Harvester", LOG_NOTICE, LogMsg);
         return TRUE;
     }
+#if defined(_MDC_SUPPORTED_)
+/*Added for RDKB-4989 */
+    if( AnscEqualString(ParamName, "MdcEventLogMsg", TRUE))
+    {
+
+	strcpy (LogLevel, pString);
+	strtok_r (LogLevel, ",",&LogMsg);
+        syslog_eventlog("mdc", LOG_NOTICE, LogMsg);
+        return TRUE;
+    }
+#endif
 
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return FALSE;
@@ -689,6 +800,16 @@ LogAgent_GetParamStringValue
         AnscCopyString(pValue, str);
         return 0;
     }
+#if defined(_MDC_SUPPORTED_)
+     /*Added for rdkb-4237*/
+    if( AnscEqualString(ParamName, "MdcLogMsg", TRUE))
+    {
+
+	AnscCopyString(str, "MdcLogMsg");
+        AnscCopyString(pValue, str);
+        return 0;
+    }
+#endif
 /*Added for rdkb-4343*/
     if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
     {
@@ -714,7 +835,18 @@ LogAgent_GetParamStringValue
         AnscCopyString(pValue, str);
         return 0;
     }
+#if defined(_MDC_SUPPORTED_)
+ /*Added for RDKB-4989 */
+    if( AnscEqualString(ParamName, "MdcEventLogMsg", TRUE))
+    {
+
+        AnscCopyString(str, "MdcEventLogMsg");
+        AnscCopyString(pValue, str);
+        return 0;
+    }
+
 /*changes end here*/
+#endif
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return -1;
 }
@@ -835,6 +967,13 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
+#if defined(_MDC_SUPPORTED_)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LoggerEnable", TRUE))
+    {
+		*pBool  = MDC_RDKLogEnable;
+        return TRUE;
+    }
+#endif
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -1136,6 +1275,29 @@ LogAgent_SetParamBoolValue
         return TRUE;
     }
 
+#if defined(_MDC_SUPPORTED_)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LoggerEnable", TRUE))
+    {
+		char buf[8];
+		MDC_RDKLogEnable = bValue;
+		printf("$$$$ MDC_RDKLogEnable = %d\n",MDC_RDKLogEnable);
+		snprintf(buf,sizeof(buf),"%d",bValue);
+		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MDC_LoggerEnable", buf) != 0)
+		{
+			AnscTraceWarning(("syscfg_set failed\n"));
+			printf("syscfg_set failed\n");
+		}
+		else
+		{
+			if (syscfg_commit() != 0)
+			{
+				AnscTraceWarning(("syscfg_commit failed\n"));
+				printf("syscfg_commit failed\n");
+			}
+		}
+		return TRUE;
+    }
+#endif
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }

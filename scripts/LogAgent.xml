@@ -32,6 +32,14 @@
 	  <syntax>string</syntax>
 	  <writable>true</writable>                             
         </parameter>
+        <!-- For RDKB-4237-->
+	<parameter>
+	  <name>MdcLogMsg</name>
+	  <type>string</type>
+	  <syntax>string</syntax>
+	  <writable>true</writable>
+        </parameter>
+	<!-- Changes end here -->
 	<!-- For RDKB-4343-->
 	<parameter>
 	  <name>HarvesterLogMsg</name>  
@@ -161,6 +169,19 @@
 			<syntax>bool</syntax>
 			<writable>true</writable>                           
         </parameter>
+        <!--For RDKB-4989 -->
+        <parameter>
+			<name>X_RDKCENTRAL-COM_MDC_LogLevel</name>
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>
+        </parameter>
+	<parameter>
+			<name>X_RDKCENTRAL-COM_MDC_LoggerEnable</name>
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>
+        </parameter>
 <!-- Changes end here -->
         <parameter>
             <name>X_RDKCENTRAL-COM_PowerMgr_LogLevel</name>
@@ -215,6 +236,13 @@
 			<type>string</type>
 			<syntax>string</syntax>
 			<writable>true</writable>                           
+        </parameter>
+        <!--For RDKB-4989-->
+        <parameter>
+			<name>MdcEventLogMsg</name>
+			<type>string</type>
+			<syntax>string</syntax>
+			<writable>true</writable>
         </parameter>
 	<!-- For RDKB-4343-->
 			<parameter>

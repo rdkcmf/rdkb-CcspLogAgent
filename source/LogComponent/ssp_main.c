@@ -352,6 +352,22 @@ void ReadLogInfo()
             MESH_RDKLogEnable = (BOOL)atoi(buf);
         }
 
+#if defined(_MDC_SUPPORTED_)
+/*Added for RDKB-4989*/
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_MDC_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            MDC_RDKLogLevel = atoi(buf);
+        }
+
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_MDC_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            MDC_RDKLogEnable = (BOOL)atoi(buf);
+        }
+#endif
+
+
 }
 int main(int argc, char* argv[])
 {
