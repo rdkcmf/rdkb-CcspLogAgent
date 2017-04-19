@@ -341,12 +341,12 @@ void ReadLogInfo()
             FSC_RDKLogEnable = (BOOL)atoi(buf);
         }
 
-        syscfg_get( NULL, "X_RDKCENTRAL-COM_MESH_LogLevel", buf, sizeof(buf));
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             MESH_RDKLogLevel = atoi(buf);
         }
-        syscfg_get( NULL, "X_RDKCENTRAL-COM_MESH_LoggerEnable", buf, sizeof(buf));
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", buf, sizeof(buf));
         if( buf != NULL )
         {
             MESH_RDKLogEnable = (BOOL)atoi(buf);

@@ -179,7 +179,7 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = FSC_RDKLogLevel;
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MESH_LogLevel", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
     {
 
         *puLong  = MESH_RDKLogLevel;
@@ -500,12 +500,12 @@ if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
         return TRUE;
     }
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MESH_LogLevel", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
     {
         char buf[8]={ 0 };
         MESH_RDKLogLevel = uValue;
         snprintf(buf,sizeof(buf),"%d",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MESH_LogLevel", buf) != 0)
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
         }
@@ -829,7 +829,7 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MESH_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
     {
         *pBool  = MESH_RDKLogEnable;
         return TRUE;
@@ -1116,12 +1116,12 @@ LogAgent_SetParamBoolValue
         SendSignal(FSC_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MESH_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
     {
         char buf[8];
         MESH_RDKLogEnable = bValue;
         snprintf(buf,sizeof(buf),"%d",bValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MESH_LoggerEnable", buf) != 0)
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
         }
