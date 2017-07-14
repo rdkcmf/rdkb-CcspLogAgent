@@ -192,6 +192,11 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = MESH_RDKLogLevel;
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+    {
+        *puLong  = MeshService_RDKLogLevel;
+        return TRUE;
+    }
 
 
 #if defined(_MDC_SUPPORTED_)
@@ -533,6 +538,25 @@ LogAgent_SetParamUlongValue
             }
         }
         SendSignal(MESH_PROC_NAME);
+        return TRUE;
+    }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        MeshService_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
         return TRUE;
     }
 
@@ -967,6 +991,12 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
+    {
+        *pBool  = MeshService_RDKLogEnable;
+        return TRUE;
+    }
+
 #if defined(_MDC_SUPPORTED_)
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LoggerEnable", TRUE))
     {
@@ -1272,6 +1302,24 @@ LogAgent_SetParamBoolValue
              }
         }
         SendSignal(MESH_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        MeshService_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", buf) != 0)
+        {
+             AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+             if (syscfg_commit() != 0)
+             {
+                 AnscTraceWarning(("syscfg_commit failed\n"));
+             }
+        }
         return TRUE;
     }
 
