@@ -12,8 +12,6 @@
 #define WIFI_PROC_NAME "wifilog_agent"
 #define Harvester_PROC_NAME "harvester"
 #define NOTIFY_PROC_NAME "notify_comp"
-#define WECB_PROC_NAME "CcspWecbController"
-#define WECBMASTER_PROC_NAME "wecb_master"
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
 #define FSC_PROC_NAME "fscMonitor"
 #define MESH_PROC_NAME "meshAgent"
@@ -165,13 +163,6 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
     {
 	
 		*puLong  = NOTIFY_RDKLogLevel;
-        return TRUE;
-    }
-	
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LogLevel", TRUE))
-    {
-	
-		*puLong  = WECB_RDKLogLevel;
         return TRUE;
     }
 
@@ -457,28 +448,6 @@ LogAgent_SetParamUlongValue
 			}
 		}
 		SendSignal(NOTIFY_PROC_NAME);
-		return TRUE;
-    }
-
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LogLevel", TRUE))
-    {
-		char buf[8]={ 0 };
-		WECB_RDKLogLevel = uValue;
-	    snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Wecb_LogLevel", buf) != 0) 
-		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-		    	 AnscTraceWarning(("syscfg_commit failed\n"));
-			}
-		}
-		SendSignal(WECB_PROC_NAME);
-		SW_Dealy();
-		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
     }
 
@@ -988,12 +957,6 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", TRUE))
-    {
-		*pBool  = WECB_RDKLogEnable;
-        return TRUE;
-    }
-
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
     {
         *pBool  = PWRMGR_RDKLogEnable;
@@ -1071,10 +1034,6 @@ LogAgent_SetParamBoolValue
 		SW_Dealy();
 		SendSignal(NOTIFY_PROC_NAME);
 		SW_Dealy();
-		SendSignal(WECB_PROC_NAME);
-		SW_Dealy();
-		SendSignal(WECBMASTER_PROC_NAME);
-        SW_Dealy();
         SendSignal(PWRMGR_PROC_NAME);
 		SW_Dealy();
         SendSignal(ETHAGENT_PROC_NAME);
@@ -1250,28 +1209,6 @@ LogAgent_SetParamBoolValue
 			 }
 		}
 		SendSignal(NOTIFY_PROC_NAME);
-		return TRUE;
-    }
-
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", TRUE))
-    {
-		char buf[8];
-		WECB_RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", buf) != 0) 
-		{
-             AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			 if (syscfg_commit() != 0) 
-			 {
-				 AnscTraceWarning(("syscfg_commit failed\n"));
-			 }
-		}
-		SendSignal(WECB_PROC_NAME);
-		SW_Dealy();
-		SendSignal(WECBMASTER_PROC_NAME);		
 		return TRUE;
     }
 
