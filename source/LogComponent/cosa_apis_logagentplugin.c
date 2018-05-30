@@ -702,7 +702,7 @@ LogAgent_SetParamStringValue
 }
 
 
-BOOL
+ULONG
 LogAgent_GetParamStringValue
     (
         ANSC_HANDLE                 hInsContext,
