@@ -100,7 +100,7 @@ LogAgent_SetParamStringValue
         char*                       pString
     );
 
-BOOL
+ULONG
 LogAgent_GetParamStringValue
     (
         ANSC_HANDLE                 hInsContext,
