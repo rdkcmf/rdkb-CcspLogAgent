@@ -207,15 +207,21 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = MeshService_RDKLogLevel;
         return TRUE;
     }
-
-
-#if defined(_MDC_SUPPORTED_)
-       if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LogLevel", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
     {
-                *puLong  = MDC_RDKLogLevel;
+        *puLong  = ETHAGENT_RDKLogLevel;
         return TRUE;
     }
-#endif
+
+       if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LogLevel", TRUE))
+    {
+	#if defined(_MDC_SUPPORTED_)
+		*puLong  = MDC_RDKLogLevel;
+	#else
+		*puLong  = 0;
+	#endif
+	return TRUE;
+    }
 
     return FALSE;
 }
@@ -832,7 +838,6 @@ LogAgent_GetParamStringValue
         AnscCopyString(pValue, str);
         return 0;
     }
-#if defined(_MDC_SUPPORTED_)
      /*Added for rdkb-4237*/
     if( AnscEqualString(ParamName, "MdcLogMsg", TRUE))
     {
@@ -841,7 +846,6 @@ LogAgent_GetParamStringValue
         AnscCopyString(pValue, str);
         return 0;
     }
-#endif
 /*Added for rdkb-4343*/
     if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
     {
@@ -867,7 +871,6 @@ LogAgent_GetParamStringValue
         AnscCopyString(pValue, str);
         return 0;
     }
-#if defined(_MDC_SUPPORTED_)
  /*Added for RDKB-4989 */
     if( AnscEqualString(ParamName, "MdcEventLogMsg", TRUE))
     {
@@ -878,7 +881,6 @@ LogAgent_GetParamStringValue
     }
 
 /*changes end here*/
-#endif
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return -1;
 }
@@ -999,13 +1001,15 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
-#if defined(_MDC_SUPPORTED_)
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MDC_LoggerEnable", TRUE))
     {
+	#if defined(_MDC_SUPPORTED_)
 		*pBool  = MDC_RDKLogEnable;
-        return TRUE;
+	#else
+		*pBool  = 0;
+	#endif
+	return TRUE;
     }
-#endif
 
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
     {
