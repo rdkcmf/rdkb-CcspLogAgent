@@ -37,19 +37,22 @@
 #include <execinfo.h>
 #endif
 #endif
-
+#ifdef _ANSC_LINUX
+#include <semaphore.h>
+#include <fcntl.h>
+#endif
 #include "ssp_global.h"
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
 
 #define DEBUG_INI_NAME "/etc/debug.ini"
 
-#ifdef ENABLE_SD_NOTIFY
-#include <systemd/sd-daemon.h>
-#endif
-
 extern char*                                pComponentName;
 char                                        g_Subsystem[32]         = {0};
+
+#ifdef _ANSC_LINUX
+    sem_t *sem;
+#endif
 
 int  cmd_dispatch(int  command)
 {
@@ -139,6 +142,19 @@ static void _print_stack_backtrace(void)
 #if defined(_ANSC_LINUX)
 static void daemonize(void) {
 	int fd;
+       /* initialize semaphores for shared processes */
+        sem = sem_open ("pSemLog", O_CREAT | O_EXCL, 0644, 0);
+        if(SEM_FAILED == sem)
+        {
+               AnscTrace("Failed to create semaphore %d - %s\n", errno, strerror(errno));
+               _exit(1);
+        }
+       /* name of semaphore is "pSemLog", semaphore is reached using this name */
+        sem_unlink ("pSemLog");
+       /* unlink prevents the semaphore existing forever */
+       /* if a crash occurs during the execution         */
+        AnscTrace("Semaphore initialization Done!!\n");
+
 	switch (fork()) {
 	case 0:
 		break;
@@ -149,6 +165,8 @@ static void daemonize(void) {
 		exit(0);
 		break;
 	default:
+               sem_wait (sem);
+               sem_close (sem);
 		_exit(0);
 	}
 
@@ -457,18 +475,14 @@ int main(int argc, char* argv[])
     //rdk_logger_init("/fss/gw/lib/debug.ini");
     rdk_logger_init(DEBUG_INI_NAME);
 	
-#ifdef ENABLE_SD_NOTIFY
-    sd_notifyf(0, "READY=1\n"
-              "STATUS=log_agent is Successfully Initialized\n"
-              "MAINPID=%lu", (unsigned long) getpid());
-  
-    CcspTraceInfo(("RDKB_SYSTEM_BOOT_UP_LOG : log_agent sd_notify Called\n"));
-#endif
 	
     system("touch /tmp/logagent_initialized");
 
     if ( bRunAsDaemon )
     {
+       sem_post (sem);
+       sem_close(sem);
+
         while(1)
         {
             sleep(30);
