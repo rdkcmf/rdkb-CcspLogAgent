@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+ If not stated otherwise in this file or this component's Licenses.txt file the
+ following copyright and licenses apply:
+
+ Copyright 2017 RDK Management
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<dataModelInfo>
+  <version>1</version>
+  <moduleName>COSA_TR181_USGv2</moduleName>
+  <author></author>
+  <description></description>
+  <library />
+  <objects>
+    <object>
+      <name>LogAgent</name>
+      <objectType>object</objectType>
+      <functions>
+        <func_GetParamUlongValue>LogAgent_GetParamUlongValue</func_GetParamUlongValue>
+        <func_SetParamUlongValue>LogAgent_SetParamUlongValue</func_SetParamUlongValue>
+	<func_GetParamStringValue>LogAgent_GetParamStringValue</func_GetParamStringValue>
+	<func_SetParamStringValue>LogAgent_SetParamStringValue</func_SetParamStringValue>
+	<func_GetParamBoolValue>LogAgent_GetParamBoolValue</func_GetParamBoolValue>
+	<func_SetParamBoolValue>LogAgent_SetParamBoolValue</func_SetParamBoolValue>
+      </functions>
+      <parameters>
+<!--Changed for RDKB-4800-->
+        <!--<parameter>
+          <name>loglevel</name>
+          <type>unsignedInt</type>
+          <syntax>uint32</syntax>
+          <writable>true</writable>
+        </parameter>-->
+<!--Changes end here-->
+	<parameter>
+	  <name>WifiLogMsg</name>  
+	  <type>string</type>	          
+	  <syntax>string</syntax>
+	  <writable>true</writable>                             
+        </parameter>
+	<!-- For RDKB-4343-->
+	<parameter>
+	  <name>HarvesterLogMsg</name>  
+	  <type>string</type>	          
+	  <syntax>string</syntax>
+	  <writable>true</writable>                             
+        </parameter>
+	<!-- Changes end here -->
+		<parameter>
+			<name>X_RDKCENTRAL-COM_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+		<parameter>
+			<name>X_RDKCENTRAL-COM_TR69_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_TR69_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+				<parameter>
+			<name>X_RDKCENTRAL-COM_PAM_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_PAM_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_NotifyComp_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_NotifyComp_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>
+        </parameter> 
+				<parameter>
+			<name>X_RDKCENTRAL-COM_PSM_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_PSM_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+				<parameter>
+			<name>X_RDKCENTRAL-COM_MTA_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_MTA_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+				<parameter>
+			<name>X_RDKCENTRAL-COM_CM_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_CM_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+				<parameter>
+			<name>X_RDKCENTRAL-COM_WiFi_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_WiFi_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+				<parameter>
+			<name>X_RDKCENTRAL-COM_CR_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_CR_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_EthAgent_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+            <parameter>
+            <name>X_RDKCENTRAL-COM_EthAgent_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+<!-- Added by Ash for RDKB-4343 -->
+			<parameter>
+			<name>X_RDKCENTRAL-COM_Harvester_LogLevel</name>  
+			<type>unsignedInt</type>
+			<syntax>uint32</syntax>
+			<writable>true</writable>                           
+        </parameter>
+			<parameter>
+			<name>X_RDKCENTRAL-COM_Harvester_LoggerEnable</name>  
+			<type>boolean</type>
+			<syntax>bool</syntax>
+			<writable>true</writable>                           
+        </parameter>
+<!-- Changes end here -->
+        <parameter>
+            <name>X_RDKCENTRAL-COM_PowerMgr_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+            <parameter>
+            <name>X_RDKCENTRAL-COM_PowerMgr_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_FSC_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+            <parameter>
+            <name>X_RDKCENTRAL-COM_FSC_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_Mesh_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+            <parameter>
+            <name>X_RDKCENTRAL-COM_Mesh_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+			<parameter>
+			<name>WifiEventLogMsg</name>  
+			<type>string</type>
+			<syntax>string</syntax>
+			<writable>true</writable>                           
+        </parameter>
+	<!-- For RDKB-4343-->
+			<parameter>
+			<name>HarvesterEventLogMsg</name>  
+			<type>string</type>
+			<syntax>string</syntax>
+			<writable>true</writable>                           
+        </parameter>
+<!-- Changes end here -->
+      </parameters>
+    </object>
+ </objects>
+</dataModelInfo>
