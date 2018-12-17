@@ -472,9 +472,9 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Cdm_Init: %s\n", Cdm_StrError(err));
         exit(1);
     }
-    //rdk_logger_init("/fss/gw/lib/debug.ini");
-    rdk_logger_init(DEBUG_INI_NAME);
-	
+#ifdef FEATURE_SUPPORT_RDKLOG
+    RDK_LOGGER_INIT();
+#endif
 	
     system("touch /tmp/logagent_initialized");
 
