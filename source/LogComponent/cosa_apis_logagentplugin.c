@@ -72,7 +72,7 @@ static int SendSignal(char *proc)
     snprintf(cmd,sizeof(cmd)-1,"%s %s","pidof ",proc);
 
 
-    if((f = v_secure_popen(cmd)) == NULL) {
+    if((f = popen(cmd, "r")) == NULL) {
         printf("popen %s error\n", cmd);
         return -1;
     }
@@ -92,13 +92,13 @@ static int SendSignal(char *proc)
         }
         ptr += strlen(ptr);
     }
-    v_secure_pclose(f);
+    pclose(f);
     snprintf(cmd2,sizeof(cmd2)-1,"%s %s","kill -14 ", Buf); /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
-    if((f = v_secure_popen(cmd2)) == NULL) {
+    if((f = popen(cmd2, "r")) == NULL) {
         printf("popen %s error\n", cmd2);
         return -1;
     }
-	v_secure_pclose(f);
+	pclose(f);
     return 0;
 }
 
