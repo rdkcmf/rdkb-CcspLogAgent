@@ -17,6 +17,7 @@
  * limitations under the License.
 */
 
+
 #include "ansc_platform.h"
 #include "cosa_apis_logagentplugin.h"
 #include "ccsp_trace.h"
@@ -105,111 +106,237 @@ static int SendSignal(char *proc)
 BOOL
 LogAgent_GetParamUlongValue
     (
-         ANSC_HANDLE                 hInsContext,
+        ANSC_HANDLE                 hInsContext,
         char*                       ParamName,
         ULONG*                      puLong
     )
 {
     ULONG                           i               = 0;
     //printf("$$$$Inside LogAgent_GetParamUlongValue in cosa_apis_logagentplugin.c\n");
-	/*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
+        /*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
 /*
-	if( AnscEqualString(ParamName, "loglevel", TRUE))
+        if( AnscEqualString(ParamName, "loglevel", TRUE))
     {
-	 //printf("$$$$Inside LogAgent_GetParamUlongValue loglevel\n");
+         //printf("$$$$Inside LogAgent_GetParamUlongValue loglevel\n");
         *puLong =  &i;
-	 //printf("$$$$puLong = %d\n",*puLong);
-	return TRUE;
+         //printf("$$$$puLong = %d\n",*puLong);
+        return TRUE;
    
     }*/
-
-if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
-{
-		*puLong  = RDKLogLevel;
-        return TRUE;
+	char buf[5] = {0};
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	TR69_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for TR69_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	PAM_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for PAM_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	PSM_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for PSM_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	MTA_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for MTA_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_CM_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	CM_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        	AnscTraceWarning(("Error in syscfg_get for CM_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	WiFi_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for WiFi_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_CR_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	CR_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for CR_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	Harvester_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for Harvester_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	NOTIFY_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for NotifyComp_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	PWRMGR_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for PowerMgr_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	ETHAGENT_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for EthAgent_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	FSC_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for FSC_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	MESH_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for Mesh_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+        {
+        	syscfg_get( NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf, sizeof(buf));
+        	if( buf[0] != "\0" )
+        	{
+        		*puLong  = (ULONG )atoi(buf);
+                	MeshService_RDKLogLevel = *puLong;
+        	}
+        	else
+        	{
+        		AnscTraceWarning(("Error in syscfg_get for MeshService_LogLevel\n"));
+        	}
+        	return TRUE;
+        }
+        return FALSE;
 }
-if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
-{
-        *puLong =  TR69_RDKLogLevel;
-		return TRUE;
-   
-}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
-    {
-		*puLong  = PAM_RDKLogLevel;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LogLevel", TRUE))
-    {
-		*puLong  = PSM_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LogLevel", TRUE))
-    {
-		*puLong  = MTA_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LogLevel", TRUE))
-    {
-		*puLong  = CM_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LogLevel", TRUE))
-    {
-		*puLong  = WiFi_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
-    {
-		*puLong  = CR_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
-    {
-	
-		*puLong  = Harvester_RDKLogLevel;
-        return TRUE;
-    }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
-    {
-	
-		*puLong  = NOTIFY_RDKLogLevel;
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
-    {
-
-        *puLong  = PWRMGR_RDKLogLevel;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
-    {
-
-        *puLong  = FSC_RDKLogLevel;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
-    {
-
-        *puLong  = MESH_RDKLogLevel;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
-    {
-        *puLong  = MeshService_RDKLogLevel;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
-    {
-        *puLong  = ETHAGENT_RDKLogLevel;
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-/**********************************************************************  
+ /**********************************************************************  
 
     caller:     owner of this object 
 
@@ -266,301 +393,384 @@ LogAgent_SetParamUlongValue
 	}
 */
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
-    {
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
+	{
 		char buf[8];
-		RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_LogLevel", buf) != 0) 
+		if ( RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
 			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					RDKLogLevel = uValue;
+				}
+			}          
 		}
 		return TRUE;
-    }
+	}
 	if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
 	{
 		char buf[8];
-		TR69_RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", buf) != 0) 
+		if (TR69_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					TR69_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(TR069_PROC_NAME);
 		return TRUE;
 	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
-    {
+        {
 		char buf[8];
-		PAM_RDKLogLevel = uValue;
-	    snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", buf) != 0) 
+		if (PAM_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", buf) != 0) 
 			{
-		    	 AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					PAM_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(PAM_PROC_NAME);
 		return TRUE;
-    }
+	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LogLevel", TRUE))
-    {
+	{
 		char buf[8];
-		PSM_RDKLogLevel = uValue;
-	    snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", buf) != 0) 
+		if (PSM_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					PSM_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(PSM_PROC_NAME);
 		return TRUE;
-    }
+	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LogLevel", TRUE))
-    {
+	{
 		char buf[8];
-		MTA_RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", buf) != 0) 
+		if (MTA_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					MTA_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(MTA_PROC_NAME);
 		return TRUE;
-    }
+        }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LogLevel", TRUE))
-    {
+        {
 		char buf[8];
-		CM_RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CM_LogLevel", buf) != 0) 
+		if (CM_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CM_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					CM_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(CM_PROC_NAME);
 		return TRUE;
-    }
+	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LogLevel", TRUE))
-    {
+	{
 		char buf[8];
-		WiFi_RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", buf) != 0) 
+		if (WiFi_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					WiFi_RDKLogLevel = uValue;
+				}
 			}
 		}
 		return TRUE;
-    }
+	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
-    {
+	{
 		char buf[8];
-		CR_RDKLogLevel = uValue;
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CR_LogLevel", buf) != 0) 
+		if (CR_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CR_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					CR_RDKLogLevel = uValue;
+				}
 			}
 		}
 		return TRUE;
-    }
+	}
 
 /*Added for RDKB-4343*/
-if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
-    {
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+	{
 		char buf[8];
-		Harvester_RDKLogLevel = uValue;
-		printf("Setting Harvester_RDKLogLevel to %d\n",Harvester_RDKLogLevel);
-		snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf) != 0) 
+		if (Harvester_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-			printf("syscfg_set failed\n");
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			printf("Setting Harvester_RDKLogLevel to %d\n",Harvester_RDKLogLevel);
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf) != 0) 
 			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
-				printf("syscfg_commit failed\n");
+				AnscTraceWarning(("syscfg_set failed\n"));
+				printf("syscfg_set failed\n");
 			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+					printf("syscfg_commit failed\n");
+				}
+				else
+				{
+					Harvester_RDKLogLevel = uValue;
+				}
+			} 
 		}
 		return TRUE;
-    }
+	}
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
-    {
+	{
 		char buf[8];
-		NOTIFY_RDKLogLevel = uValue;
-	    snprintf(buf,sizeof(buf),"%d",uValue);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf) != 0) 
+		if (NOTIFY_RDKLogLevel != uValue)
 		{
-			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf) != 0) 
 			{
-		    	 AnscTraceWarning(("syscfg_commit failed\n"));
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else 
+			{
+				if (syscfg_commit() != 0) 
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					NOTIFY_RDKLogLevel = uValue;
+				}
 			}
 		}
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
-    {
-        char buf[8]={ 0 };
-        PWRMGR_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%d",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        SendSignal(PWRMGR_PROC_NAME);
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
-    {
-        char buf[8]={ 0 };
-        FSC_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%d",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        SendSignal(FSC_PROC_NAME);
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
-    {
-                char buf[8];
-                ETHAGENT_RDKLogLevel = uValue;
-                snprintf(buf,sizeof(buf),"%d",uValue);
-                if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf) != 0)
-                {
-                        AnscTraceWarning(("syscfg_set failed\n"));
-                }
-                else
-                {
-                        if (syscfg_commit() != 0)
-                        {
-                                AnscTraceWarning(("syscfg_commit failed\n"));
-                        }
-                }
-                SendSignal(ETHAGENT_PROC_NAME);
-                return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
-    {
-        char buf[8]={ 0 };
-        MESH_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%d",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        SendSignal(MESH_PROC_NAME);
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
-    {
-        char buf[8]={ 0 };
-        MeshService_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%d",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        return TRUE;
-    }
-
-    return FALSE;
+	}
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+	{
+		char buf[8]={ 0 };
+		if (PWRMGR_RDKLogLevel != uValue)
+		{
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf) != 0)
+			{
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else
+			{
+				if (syscfg_commit() != 0)
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					PWRMGR_RDKLogLevel = uValue;
+				}
+			}
+		}
+		SendSignal(PWRMGR_PROC_NAME);
+		return TRUE;
+	}
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+	{
+		char buf[8]={ 0 };
+		if (FSC_RDKLogLevel != uValue)
+		{
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf) != 0)
+			{
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else
+			{
+				if (syscfg_commit() != 0)
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					FSC_RDKLogLevel = uValue;
+				}
+			}
+		}
+		SendSignal(FSC_PROC_NAME);
+		return TRUE;
+	}
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+	{
+		char buf[8];
+		if (ETHAGENT_RDKLogLevel != uValue)
+		{
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf) != 0)
+			{
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else
+			{
+				if (syscfg_commit() != 0)
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					ETHAGENT_RDKLogLevel = uValue;
+				}
+			}
+		}
+		SendSignal(ETHAGENT_PROC_NAME);
+		return TRUE;
+	}
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
+	{
+        	char buf[8]={ 0 };
+		if (MESH_RDKLogLevel != uValue)
+		{
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf) != 0)
+			{
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else
+			{
+				if (syscfg_commit() != 0)
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					MESH_RDKLogLevel = uValue;
+				}
+			}
+		}
+		SendSignal(MESH_PROC_NAME);
+		return TRUE;
+	}
+	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+	{
+		char buf[8]={ 0 };
+		if (MeshService_RDKLogLevel != uValue)
+		{
+			snprintf(buf,sizeof(buf),"%d",uValue);
+			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf) != 0)
+			{
+				AnscTraceWarning(("syscfg_set failed\n"));
+			}
+			else
+			{
+				if (syscfg_commit() != 0)
+				{
+					AnscTraceWarning(("syscfg_commit failed\n"));
+				}
+				else
+				{
+					MeshService_RDKLogLevel = uValue;
+				}
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
 }
-
-
+     
 BOOL
 LogAgent_SetParamStringValue
     (
@@ -789,95 +999,224 @@ LogAgent_Commit
 }
 BOOL
 LogAgent_GetParamBoolValue
-    (
+(
         ANSC_HANDLE                 hInsContext,
         char*                       ParamName,
         BOOL*                       pBool
     )
 {
     /* check the parameter name and return the corresponding value */
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LoggerEnable", TRUE))
+    char buf[5] = {0};
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LoggerEnable", TRUE))
     {
-		*pBool = RDKLogEnable;
+    	syscfg_get( NULL, "X_RDKCENTRAL-COM_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+        	AnscTraceWarning(("Error in syscfg_get for LoggerEnable\n"));
+        }
         return TRUE;
     }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
     {
-		*pBool  = TR69_RDKLogEnable;
+    	syscfg_get( NULL, "X_RDKCENTRAL-COM_TR69_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		TR69_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for TR69_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LoggerEnable", TRUE))
     {
-		*pBool  = PAM_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_PAM_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		PAM_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for PAM_LoggerEnable\n"));;
+        }
         return TRUE;
     }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LoggerEnable", TRUE))
     {
-		*pBool  = PSM_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_PSM_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		PSM_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for PSM_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LoggerEnable", TRUE))
     {
-		*pBool  = MTA_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_MTA_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		MTA_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for MTA_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LoggerEnable", TRUE))
     {
-		*pBool  = CM_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_CM_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		CM_RDKLogEnable = *pBool;
+    	}
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for CM_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", TRUE))
     {
-		*pBool  = WiFi_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool =(BOOL)atoi(buf);
+    		WiFi_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for WiFi_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
     {
-		*pBool  = CR_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_CR_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		CR_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+           	 AnscTraceWarning(("Error in syscfg_get for CR_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
     {
-	
-		*pBool  = Harvester_RDKLogEnable;
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", buf, sizeof(buf));
+    	if( buf[0] != "\0" )
+    	{
+    		*pBool = (BOOL)atoi(buf);
+    		Harvester_RDKLogEnable = *pBool;
+    	}
+    	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for Harvester_LoggerEnable\n"));
+        }
         return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
     {
-		*pBool  = NOTIFY_RDKLogEnable;
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	NOTIFY_RDKLogEnable = *pBool;
+        }
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for NotifyComp_LoggerEnable\n"));
+        }
         return TRUE;
     }
-
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
     {
-        *pBool  = PWRMGR_RDKLogEnable;
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	PWRMGR_RDKLogEnable = *pBool;
+        }
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for PowerMgr_LoggerEnable\n"));
+        }
         return TRUE;
     }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
-    {
-        *pBool  = FSC_RDKLogEnable;
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
-    {
-        *pBool  = MESH_RDKLogEnable;
-        return TRUE;
-    }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
-    {
-        *pBool  = MeshService_RDKLogEnable;
-        return TRUE;
-    }
-
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
     {
-        *pBool  = ETHAGENT_RDKLogEnable;
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	ETHAGENT_RDKLogEnable = *pBool;
+        }
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for EthAgent_LoggerEnable\n"));
+        }
         return TRUE;
     }
-
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
+    {
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	FSC_RDKLogEnable = *pBool;
+        }
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for FSC_LoggerEnable\n"));
+        }
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
+    {
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	MESH_RDKLogEnable = *pBool;
+	}
+	else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for Mesh_LoggerEnable\n"));
+        }
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
+    {
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", buf, sizeof(buf));
+        if( buf[0] != "\0" )
+        {
+            	*pBool = (BOOL)atoi(buf);
+            	MeshService_RDKLogEnable = *pBool;
+        }
+        else
+        {
+            	AnscTraceWarning(("Error in syscfg_get for MeshService_LoggerEnable\n"));
+        }
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
