@@ -200,6 +200,11 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = MeshService_RDKLogLevel;
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+    {
+        *puLong  = ETHAGENT_RDKLogLevel;
+        return TRUE;
+    }
 
     return FALSE;
 }
@@ -864,6 +869,12 @@ LogAgent_GetParamBoolValue
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
     {
         *pBool  = MeshService_RDKLogEnable;
+        return TRUE;
+    }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    {
+        *pBool  = ETHAGENT_RDKLogEnable;
         return TRUE;
     }
 
