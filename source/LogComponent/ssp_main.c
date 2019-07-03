@@ -386,7 +386,16 @@ void ReadLogInfo()
         {
             MeshService_RDKLogEnable = (BOOL)atoi(buf);
         }
-
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            ETHAGENT_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            ETHAGENT_RDKLogEnable = (BOOL)atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {
