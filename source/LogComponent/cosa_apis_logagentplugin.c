@@ -27,7 +27,11 @@
 #define CM_PROC_NAME "CcspCMAgentSsp"
 #define PSM_PROC_NAME "PsmSsp"
 #define PAM_PROC_NAME "CcspPandMSsp"
+#if !defined(_PLATFORM_RASPBERRYPI_)
 #define WIFI_PROC_NAME "wifilog_agent"
+#else
+#define WIFI_PROC_NAME "CcspWifiSsp"
+#endif
 #define Harvester_PROC_NAME "harvester"
 #define NOTIFY_PROC_NAME "notify_comp"
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
@@ -200,7 +204,13 @@ if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
         *puLong  = MeshService_RDKLogLevel;
         return TRUE;
     }
-
+#if defined(_PLATFORM_RASPBERRYPI_)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+    {
+        *puLong  = ETHAGENT_RDKLogLevel;
+        return TRUE;
+    }
+#endif
     return FALSE;
 }
 
@@ -390,6 +400,9 @@ LogAgent_SetParamUlongValue
 				AnscTraceWarning(("syscfg_commit failed\n"));
 			}
 		}
+#if defined(_PLATFORM_RASPBERRYPI_)
+		SendSignal(WIFI_PROC_NAME);
+#endif
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
@@ -867,6 +880,12 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    {
+        *pBool  = ETHAGENT_RDKLogEnable;
+        return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -910,6 +929,11 @@ LogAgent_SetParamBoolValue
         SendSignal(PWRMGR_PROC_NAME);
 		SW_Dealy();
         SendSignal(ETHAGENT_PROC_NAME);
+#if defined(_PLATFORM_RASPBERRYPI_)
+		SW_Dealy();
+        SendSignal(WIFI_PROC_NAME);
+		SW_Dealy();
+#endif
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
@@ -1023,7 +1047,9 @@ LogAgent_SetParamBoolValue
 				AnscTraceWarning(("syscfg_commit failed\n"));
 			}
 		}
-
+#if defined(_PLATFORM_RASPBERRYPI_)
+		SendSignal(WIFI_PROC_NAME);
+#endif
 		return TRUE;
     }
 	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
