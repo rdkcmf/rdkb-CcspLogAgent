@@ -86,4 +86,7 @@ PKG_CHECK_MODULES([DBUS],[dbus-1 >= 1.6.18])
 AC_CONFIG_FILES([Makefile
 		source/Makefile
 		source/LogComponent/Makefile])
+
+AM_CONDITIONAL([PLATFORM_RASPBERRYPI_ENABLED], [test $PLATFORM_RASPBERRYPI_ENABLED = yes])
+
 AC_OUTPUT
