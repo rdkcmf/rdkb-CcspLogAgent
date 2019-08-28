@@ -35,7 +35,7 @@
 #define FSC_PROC_NAME "fscMonitor"
 #define MESH_PROC_NAME "meshAgent"
 #define ETHAGENT_PROC_NAME "CcspEthAgent"
-
+#define TELCOVOIPAGENT_PROC_NAME "telcovoip_agent"
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
 #define LOGAGENT_MAX_BUF_SIZE      241
@@ -333,6 +333,11 @@ LogAgent_GetParamUlongValue
         		AnscTraceWarning(("Error in syscfg_get for MeshService_LogLevel\n"));
         	}
         	return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", TRUE))
+        {
+            *puLong  = TELCOVOIPAGENT_RDKLogLevel;
+            return TRUE;
         }
         return FALSE;
 }
@@ -768,6 +773,29 @@ LogAgent_SetParamUlongValue
 		}
 		return TRUE;
 	}
+
+#if defined(_HUB4_PRODUCT_REQ_)
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        TELCOVOIPAGENT_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOIPAGENT_PROC_NAME);
+        return TRUE;
+    }
+#endif /* _HUB4_PRODUCT_REQ_ */
+
 	return FALSE;
 }
      
@@ -1217,6 +1245,13 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", TRUE))
+    {
+        *pBool  = TELCOVOIPAGENT_RDKLogEnable;
+        return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -1531,6 +1566,28 @@ LogAgent_SetParamBoolValue
         SendSignal(ETHAGENT_PROC_NAME);
         return TRUE;
     }
+
+#if defined(_HUB4_PRODUCT_REQ_)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        TELCOVOIPAGENT_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOIPAGENT_PROC_NAME);
+        return TRUE;
+    }
+#endif /* _HUB4_PRODUCT_REQ_ */
 
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;

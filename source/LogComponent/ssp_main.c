@@ -396,6 +396,19 @@ void ReadLogInfo()
         {
             ETHAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
+
+#if defined(_HUB4_PRODUCT_REQ_)
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOIPAGENT_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOIPAGENT_RDKLogEnable = (BOOL)atoi(buf);
+        }
+#endif /* _HUB4_PRODUCT_REQ_ */
 }
 int main(int argc, char* argv[])
 {
