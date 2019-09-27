@@ -235,7 +235,17 @@ void ReadLogInfo()
  
 		//char buf[5];
 		char buf[5];
-		syscfg_init();
+	int retries = 0;
+
+	//Prevent Race Condtion Where Component Calls Init Before Create Has Occurred
+	while (retries++ < 10 && syscfg_init() != 0) {
+		sleep(1);
+	}
+	if (retries >= 10) {
+		CcspTraceWarning(("Can not init syscfg, default logger configuration will be used. \n"));
+		return;
+	}
+
     	if( !(syscfg_get( NULL, "X_RDKCENTRAL-COM_LogLevel", buf, sizeof(buf))))
     		{
     		    RDKLogLevel = atoi(buf);
