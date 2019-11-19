@@ -53,6 +53,7 @@
 #include "plugin_main.h"
 #include "dslh_dmagnt_interface.h"
 #include "ccsp_trace.h"
+#include "dm_pack_create_func.h"
 
 PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController        = NULL;
 PCOMPONENT_COMMON_LOGAGENT          g_pComponent_COMMON_logagent  = NULL;
@@ -179,11 +180,11 @@ ssp_engage
     }
 
     returnStatus =
-        pDslhCpeController->RegisterCcspDataModel
+        pDslhCpeController->RegisterCcspDataModel2
             (
                 (ANSC_HANDLE)pDslhCpeController,
                 CrName, /* CCSP_DBUS_INTERFACE_CR,*/              /* CCSP CR ID */
-                CCSP_DATAMODEL_XML_FILE,             /* Data Model XML file. Can be empty if only base data model supported. */
+                DMPackCreateDataModelXML,             /* Data Model XML file. Can be empty if only base data model supported. */
                 CCSP_COMPONENT_NAME_LOGAGENT,            /* Component Name    */
                 CCSP_COMPONENT_VERSION_LOGAGENT,         /* Component Version */
                 CCSP_COMPONENT_PATH_LOGAGENT,            /* Component Path    */

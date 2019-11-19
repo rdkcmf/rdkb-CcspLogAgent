@@ -29,6 +29,6 @@ AM_CFLAGS = -D_ANSC_LINUX -D_ANSC_USER -D_ANSC_LITTLE_ENDIAN_ -DFEATURE_SUPPORT_
 
 AM_LDFLAGS = -lccsp_common -lrdkloggers -lsysevent -lsyscfg -lulog $(DBUS_LIBS) $(SYSTEMD_LDFLAGS)
 
-log_agent_SOURCES = cosa_apis_logagentplugin.c plugin_main.c ssp_action.c ssp_messagebus_interface.c ssp_main.c
+log_agent_SOURCES = cosa_apis_logagentplugin.c plugin_main.c ssp_action.c ssp_messagebus_interface.c ssp_main.c dm_pack_datamodel.c
 
 
