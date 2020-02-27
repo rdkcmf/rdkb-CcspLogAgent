@@ -23,13 +23,14 @@
 #include "ccsp_trace.h"
 #include "ccsp_syslog.h"
 #include  "safec_lib_common.h"
+#include <syscfg/syscfg.h>
 
 #define TR069_PROC_NAME "CcspTr069PaSsp"
 #define MTA_PROC_NAME "CcspMtaAgentSsp"
 #define CM_PROC_NAME "CcspCMAgentSsp"
 #define PSM_PROC_NAME "PsmSsp"
 #define PAM_PROC_NAME "CcspPandMSsp"
-#if !defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_)
 #define WIFI_PROC_NAME "wifilog_agent"
 #else
 #define WIFI_PROC_NAME "CcspWifiSsp"
@@ -50,7 +51,13 @@
 #define LOGAGENT_MAX_BUF_SIZE      241
 #define LOGAGENT_MAX_COMMAND_LEN   256
 #define LOGAGENT_PROC_NAME_LEN     50
+#define LOGAGENT_PROC_NAME_LENGTH  65
 #define LOGAGENT_MAX_READ_SIZE     120
+#define DEVICE_PROPS_FILE  "/etc/device.properties"
+
+#if defined(_COSA_INTEL_XB3_ARM_)
+static int getValueFromDevicePropsFile(char *str, char **value);
+#endif
 
 #define NUM_LOGLEVEL_TYPES (sizeof(loglevel_type_table)/sizeof(loglevel_type_table[0]))
 
@@ -112,9 +119,107 @@ void SW_Dealy()
 	for(i=0;i<10;i++)
 	for(j=0;j<1000;j++);
 }
+
+#if defined(_COSA_INTEL_XB3_ARM_)
+static int getValueFromDevicePropsFile(char *str, char **value)
+{
+    FILE *fp = fopen(DEVICE_PROPS_FILE, "r");
+    char buf[ 1024 ] = { 0 };
+    char *tempStr = NULL;
+	int ret = 0;
+    if( NULL != fp )
+    {
+        while ( fgets( buf, sizeof( buf ), fp ) != NULL )
+        {
+            if ( strstr( buf, str ) != NULL )
+            {
+                buf[strcspn( buf, "\r\n" )] = 0; // Strip off any carriage returns
+                tempStr = strstr( buf, "=" );
+                tempStr++;
+                *value = tempStr;
+                ret = 0;
+                break;
+            }
+        }
+        if( NULL == *value)
+        {
+            AnscTraceWarning(("%s is not present in device.properties file\n",str));
+            ret = -1;
+        }
+    }
+    else
+    {
+        AnscTraceWarning(("Failed to open file:%s\n", DEVICE_PROPS_FILE));
+        return -1;
+    }
+    if( fp )
+    {
+        fclose(fp);
+    }
+   return ret;
+}
+#endif
+
+#if defined(_COSA_INTEL_XB3_ARM_)
+static int SendSignal_wifi()
+{
+    FILE *f = NULL;
+    char Buf[LOGAGENT_MAX_BUF_SIZE] = {0};
+    char *ptr = Buf;
+    char cmd[LOGAGENT_PROC_NAME_LENGTH] = {0};
+    char cmd2[LOGAGENT_MAX_COMMAND_LEN] = {0};
+    unsigned int iBufferRead = 0;
+    char rpcCmd[128];
+    char *atomIp = NULL;
+    
+    if(getValueFromDevicePropsFile("ATOM_ARPING_IP", &atomIp) == 0)
+    {
+        AnscTraceWarning(("atom ip present in device.properties file is %s\n",atomIp));
+        sprintf(rpcCmd,"rpcclient %s", atomIp);
+    }
+    snprintf(cmd,sizeof(cmd)-1," %s %s",rpcCmd,"\"pidof CcspWifiSsp\" | grep -v \"RPC\"");	
+	    
+    if((f = popen(cmd, "r")) == NULL) {
+        printf("popen %s error\n", cmd);
+        return -1;
+    }
+	    
+    while(!feof(f))
+    {
+        *ptr = 0;
+        fgets(ptr,LOGAGENT_MAX_READ_SIZE,f);
+        iBufferRead += strlen(ptr);
+	    if((strlen(ptr) == 0) || (iBufferRead >(LOGAGENT_MAX_BUF_SIZE-1)) )
+        {
+            break;
+        }
+        ptr += strlen(ptr);
+    }
+    pclose(f);
+	f = NULL;
+	const char delim_rpc[3] = "\n";
+   	char *token;
+   
+   	/* get the first token */
+   	token = strtok(Buf, delim_rpc);
+	if ( token == NULL )
+	{
+	token ='\0';
+	}
+    snprintf(cmd2,sizeof(cmd2)-1,"%s %s %s %s",rpcCmd," \"kill -10 ", token,"\""); /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
+    
+    if((f = popen(cmd2, "r")) == NULL) {
+        printf("popen %s error\n", cmd2);
+	return -1;
+    }
+    pclose(f);
+    return 0;
+}
+#endif
+
 static int SendSignal(char *proc)
 {
-    FILE *f;
+    FILE *f = NULL;
     char Buf[LOGAGENT_MAX_BUF_SIZE] = {0};
     char *ptr = Buf;
     char cmd[LOGAGENT_PROC_NAME_LEN] = {0};
@@ -137,7 +242,10 @@ static int SendSignal(char *proc)
     while(!feof(f))
     {
         *ptr = 0;
-        fgets(ptr,LOGAGENT_MAX_READ_SIZE,f);
+        if (fgets(ptr,LOGAGENT_MAX_READ_SIZE,f) == NULL)
+        {
+            break;
+        }
         iBufferRead += strlen(ptr);
         /*
         ** RDKB-7469, CID-33124, break if length read more than buffer size 
@@ -151,7 +259,8 @@ static int SendSignal(char *proc)
     }
     pclose(f);
     /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
-    rc = sprintf_s(cmd2,sizeof(cmd2),"kill -14 %s", Buf);
+    f = NULL;
+    rc = sprintf_s(cmd2,sizeof(cmd2),"kill -10 %s", Buf);
     if(rc < EOK)
     {
         ERR_CHK(rc);
@@ -734,7 +843,10 @@ LogAgent_SetParamUlongValue
 				}
 			}
 		}
-#if defined(_PLATFORM_RASPBERRYPI_)
+		
+		#if defined(_COSA_INTEL_XB3_ARM_)
+		SendSignal_wifi();
+		#else 
 		SendSignal(WIFI_PROC_NAME);
 #endif
 		return TRUE;
@@ -1677,11 +1789,14 @@ LogAgent_SetParamBoolValue
         SendSignal(PWRMGR_PROC_NAME);
 		SW_Dealy();
         SendSignal(ETHAGENT_PROC_NAME);
-#if defined(_PLATFORM_RASPBERRYPI_)
-                SW_Dealy();
-                SendSignal(WIFI_PROC_NAME);
 		SW_Dealy();
-#endif																				
+		#if defined(_COSA_INTEL_XB3_ARM_)
+		SendSignal_wifi();
+		SW_Dealy();
+		#else 
+		SendSignal(WIFI_PROC_NAME);
+		SW_Dealy();
+		#endif													
 		return TRUE;
     }
     rc = strcmp_s("X_RDKCENTRAL-COM_TR69_LoggerEnable",strlen("X_RDKCENTRAL-COM_TR69_LoggerEnable"),ParamName,&ind);
@@ -1837,9 +1952,13 @@ LogAgent_SetParamBoolValue
 				AnscTraceWarning(("syscfg_commit failed\n"));
 			}
 		}
-#if defined(_PLATFORM_RASPBERRYPI_)
+		#if defined(_COSA_INTEL_XB3_ARM_)
+		SendSignal_wifi();
+		SW_Dealy();
+		#else 
 		SendSignal(WIFI_PROC_NAME);
-#endif
+		SW_Dealy();
+		#endif
 		return TRUE;
     }
     rc = strcmp_s("X_RDKCENTRAL-COM_CR_LoggerEnable",strlen("X_RDKCENTRAL-COM_CR_LoggerEnable"),ParamName,&ind);
