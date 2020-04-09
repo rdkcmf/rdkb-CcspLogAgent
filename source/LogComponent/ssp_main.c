@@ -46,9 +46,9 @@
 #include "ccsp_dm_api.h"
 
 #define DEBUG_INI_NAME "/etc/debug.ini"
-
+#define MAX_SUBSYSTEM_SIZE 32
 extern char*                                pComponentName;
-char                                        g_Subsystem[32]         = {0};
+char                                        g_Subsystem[MAX_SUBSYSTEM_SIZE]         = {0};
 
 #ifdef _ANSC_LINUX
     sem_t *sem;
@@ -438,7 +438,15 @@ int main(int argc, char* argv[])
     {
         if ( (strcmp(argv[idx], "-subsys") == 0) )
         {
-            AnscCopyString(g_Subsystem, argv[idx+1]);
+            /* Coverity  Fix CID: 135488 STRING_SIZE */
+            if( idx + 1 < argc )
+            {
+                AnscCopyString(g_Subsystem, argv[idx+1]);
+            }
+            else
+            {
+                fprintf(stderr, "idx+1  exceeds argc  \n");
+            }
         }
         else if ( strcmp(argv[idx], "-c") == 0 )
         {
