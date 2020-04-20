@@ -22,6 +22,7 @@
 #include "cosa_apis_logagentplugin.h"
 #include "ccsp_trace.h"
 #include "ccsp_syslog.h"
+#include  "safec_lib_common.h"
 
 #define TR069_PROC_NAME "CcspTr069PaSsp"
 #define MTA_PROC_NAME "CcspMtaAgentSsp"
@@ -46,6 +47,47 @@
 #define LOGAGENT_MAX_COMMAND_LEN   256
 #define LOGAGENT_PROC_NAME_LEN     50
 #define LOGAGENT_MAX_READ_SIZE     120
+
+#define NUM_LOGLEVEL_TYPES (sizeof(loglevel_type_table)/sizeof(loglevel_type_table[0]))
+
+
+/*Structure defined to get the log level type from the given Log Names */
+
+typedef struct loglevel_pair {
+  char     *name;
+  int      level;
+} LOGLEVEL_PAIR;
+
+LOGLEVEL_PAIR loglevel_type_table[] = {
+  { "RDK_LOG_ERROR",  RDK_LOG_ERROR },
+  { "RDK_LOG_WARN",   RDK_LOG_WARN   },
+  { "RDK_LOG_NOTICE", RDK_LOG_NOTICE },
+  { "RDK_LOG_INFO",   RDK_LOG_INFO },
+  { "RDK_LOG_DEBUG",  RDK_LOG_DEBUG },
+  { "RDK_LOG_FATAL",  RDK_LOG_FATAL }
+};
+
+int loglevel_type_from_name(char *name, int *type_ptr)
+{
+  int rc = -1;
+  int ind = -1;
+  int i = 0;
+  if((name == NULL) || (type_ptr == NULL))
+     return 0;
+
+  for (i = 0 ; i < NUM_LOGLEVEL_TYPES ; ++i)
+  {
+      rc = strcmp_s(name, strlen(name), loglevel_type_table[i].name, &ind);
+      ERR_CHK(rc);
+      if((rc == EOK) && (!ind))
+      {
+          *type_ptr = loglevel_type_table[i].level;
+          return 1;
+      }
+  }
+  return 0;
+}
+
 
 /* structure defined for object "PluginSampleObj"  */
 typedef  struct
@@ -820,133 +862,135 @@ LogAgent_SetParamStringValue
 	int level = 0;
 	char WiFiLogeComponent[100] = "com.cisco.spvtg.ccsp.logagent";
 	char HarvesterLogeComponent[100] = "harvester";
+        errno_t rc = -1;
+        int ind = -1;
+        char *tok;
+        size_t len = 0;
+
+     if((pString == NULL) || (strlen(pString) >= sizeof(LogLevel)))
+           return FALSE;
 	
     /* check the parameter name and set the corresponding value */
-    if( AnscEqualString(ParamName, "WifiLogMsg", TRUE))
+
+    rc = strcmp_s("WifiLogMsg",strlen("WifiLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	//printf("$$$$Inside LogAgent_SetParamStringValue for WifiLogMsg \n");
-	strcpy (LogLevel, pString);
-	strtok_r (LogLevel, ",",&LogMsg);
+	rc =  strcpy_s(LogLevel,sizeof(LogLevel),pString);
+        if(rc != EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
 
-	if( AnscEqualString(LogLevel, "RDK_LOG_ERROR", TRUE))
-	{
-	
-		level = RDK_LOG_ERROR;
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_ERROR,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_WARN", TRUE))
-	{
-	
-		level = RDK_LOG_WARN;		
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_WARN,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_NOTICE", TRUE))
-	{
-	
-		level = RDK_LOG_NOTICE;	
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_NOTICE,(LogMsg));
-	}
-	   else if( AnscEqualString(LogLevel, "RDK_LOG_INFO", TRUE))
-	{
-	
-		level = RDK_LOG_INFO;
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_INFO,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_DEBUG", TRUE))
-	{
-	
-		level = RDK_LOG_DEBUG;
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_DEBUG,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_FATAL", TRUE))
-	{
-	
-		level = RDK_LOG_FATAL;
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_FATAL,(LogMsg));
-	}
-	else
-	{	
-	
-		level = RDK_LOG_INFO;
-		CcspTraceExec(WiFiLogeComponent,RDK_LOG_INFO,(LogMsg));
-	}
-	   
+        len = strlen(LogLevel);
+        tok = strtok_s (LogLevel, &len, ",",&LogMsg);
+        if(errno != EOK)
+        {
+           ERR_CHK(errno);
+           return FALSE;
+        }
+
+        if (!loglevel_type_from_name(LogLevel, &level))
+        {
+            printf("unrecognized type name");
+            level = RDK_LOG_INFO;
+        }
+        else
+        {
+	    printf("\ntype name found - %d\n",level);
+        }
+
+        CcspTraceExec(WiFiLogeComponent, level, (LogMsg));
+
         return TRUE;
 		
     }
 
 /*Added for RDKB-4343*/
-   if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
-     {
-	//printf("$$$$Inside LogAgent_SetParamStringValue for HarvesterLogMsg \n");
-     	strcpy (LogLevel, pString);
-	strtok_r (LogLevel, ",",&LogMsg);
+    rc = strcmp_s("HarvesterLogMsg",strlen("HarvesterLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
+    {
+	 //printf("$$$$Inside LogAgent_SetParamStringValue for HarvesterLogMsg \n");
+          rc =  strcpy_s(LogLevel,sizeof(LogLevel),pString);
+          if(rc != EOK)
+          {
+             ERR_CHK(rc);
+             return FALSE;
+          }
 
-	if( AnscEqualString(LogLevel, "RDK_LOG_ERROR", TRUE))
-	{
-	
-		level = RDK_LOG_ERROR;
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_ERROR,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_WARN", TRUE))
-	{
-	
-		level = RDK_LOG_WARN;		
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_WARN,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_NOTICE", TRUE))
-	{
-	
-		level = RDK_LOG_NOTICE;	
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_NOTICE,(LogMsg));
-	}
-	   else if( AnscEqualString(LogLevel, "RDK_LOG_INFO", TRUE))
-	{
-	
-		level = RDK_LOG_INFO;
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_INFO,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_DEBUG", TRUE))
-	{
-	
-		level = RDK_LOG_DEBUG;
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_DEBUG,(LogMsg));
-	}
-	else if( AnscEqualString(LogLevel, "RDK_LOG_FATAL", TRUE))
-	{
-	
-		level = RDK_LOG_FATAL;
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_FATAL,(LogMsg));
-	}
-	else
-	{	
-	
-		level = RDK_LOG_INFO;
-		CcspTraceExec(HarvesterLogeComponent,RDK_LOG_INFO,(LogMsg));
-	}
-	   
-        return TRUE;
-		
-    }
+          len = strlen(LogLevel);
+          tok  =  strtok_s(LogLevel, &len , ",", &LogMsg);
+          if(errno != EOK)
+          {
+             ERR_CHK(errno);
+             return FALSE;
+          }
+
+          if (!loglevel_type_from_name(LogLevel, &level))
+          {
+              printf("unrecognized type name");
+              level = RDK_LOG_INFO;
+          }
+          else
+          {
+              printf("\ntype name found - %d\n",level);
+          }
+
+          CcspTraceExec(HarvesterLogeComponent, level, (LogMsg));
+
+          return TRUE;
+   }
 /*changes end here*/
-    if( AnscEqualString(ParamName, "WifiEventLogMsg", TRUE))
+    rc = strcmp_s("WifiEventLogMsg",strlen("WifiEventLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	//printf("$$$$Inside WifiEventLogMsg\n");
-	strcpy (LogLevel, pString);
-	strtok_r (LogLevel, ",",&LogMsg);
+        rc =  strcpy_s(LogLevel,sizeof(LogLevel),pString);
+        if(rc != EOK)
+         {
+             ERR_CHK(rc);
+             return FALSE;
+         }
+
+         len = strlen(LogLevel);
+	 tok = strtok_s (LogLevel, &len, ",", &LogMsg);
+         if(errno != EOK)
+         {
+            ERR_CHK(errno);
+            return FALSE;
+         }
+
         syslog_eventlog("Wifi", LOG_NOTICE, LogMsg);
         return TRUE;
     }
 
-    if( AnscEqualString(ParamName, "HarvesterEventLogMsg", TRUE))
+    rc = strcmp_s("HarvesterEventLogMsg",strlen("HarvesterEventLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	//printf("$$$$Inside HarvesterEventLogMsg\n");
-	strcpy (LogLevel, pString);
-	strtok_r (LogLevel, ",",&LogMsg);
+        rc =  strcpy_s(LogLevel,sizeof(LogLevel),pString);
+        if(rc != EOK)
+         {
+            ERR_CHK(rc);
+            return FALSE;
+         }
+
+         len = strlen(LogLevel);
+	 tok = strtok_s(LogLevel, &len,",",&LogMsg);
+         if(errno != EOK)
+         {
+              ERR_CHK(errno);
+              return FALSE;
+         }
+
         syslog_eventlog("Harvester", LOG_NOTICE, LogMsg);
         return TRUE;
     }
-
     AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return FALSE;
 }
