@@ -120,8 +120,14 @@ static int SendSignal(char *proc)
     char cmd[LOGAGENT_PROC_NAME_LEN] = {0};
     char cmd2[LOGAGENT_MAX_COMMAND_LEN] = {0};
     unsigned int iBufferRead = 0;
-    snprintf(cmd,sizeof(cmd)-1,"%s %s","pidof ",proc);
-
+    errno_t rc = -1;
+    
+    rc =  sprintf_s(cmd,sizeof(cmd),"%s %s","pidof ",proc);
+    if(rc < EOK)
+    {
+        ERR_CHK(rc);
+        return -1;
+    }
 
     if((f = popen(cmd, "r")) == NULL) {
         printf("popen %s error\n", cmd);
@@ -144,7 +150,14 @@ static int SendSignal(char *proc)
         ptr += strlen(ptr);
     }
     pclose(f);
-    snprintf(cmd2,sizeof(cmd2)-1,"%s %s","kill -14 ", Buf); /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
+    /*RDKB-7469, CID-33124, limiting Buffer copied to contain in cmd2*/
+    rc = sprintf_s(cmd2,sizeof(cmd2),"kill -14 %s", Buf);
+    if(rc < EOK)
+    {
+        ERR_CHK(rc);
+        return -1;
+    }
+
     if((f = popen(cmd2, "r")) == NULL) {
         printf("popen %s error\n", cmd2);
         return -1;
@@ -162,6 +175,8 @@ LogAgent_GetParamUlongValue
     )
 {
     ULONG                           i               = 0;
+    errno_t rc       = -1;
+    int     ind      = -1;
     //printf("$$$$Inside LogAgent_GetParamUlongValue in cosa_apis_logagentplugin.c\n");
         /*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
 /*
@@ -174,7 +189,9 @@ LogAgent_GetParamUlongValue
    
     }*/
 	char buf[5] = {0};
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_LogLevel",strlen("X_RDKCENTRAL-COM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -188,7 +205,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_TR69_LogLevel",strlen("X_RDKCENTRAL-COM_TR69_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -202,7 +221,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PAM_LogLevel",strlen("X_RDKCENTRAL-COM_PAM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -216,7 +237,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PSM_LogLevel",strlen("X_RDKCENTRAL-COM_PSM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -230,7 +253,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_MTA_LogLevel",strlen("X_RDKCENTRAL-COM_MTA_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -244,7 +269,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_CM_LogLevel",strlen("X_RDKCENTRAL-COM_CM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_CM_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -258,7 +285,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_WiFi_LogLevel",strlen("X_RDKCENTRAL-COM_WiFi_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -272,7 +301,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_CR_LogLevel",strlen("X_RDKCENTRAL-COM_CR_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_CR_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -286,7 +317,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_Harvester_LogLevel",strlen("X_RDKCENTRAL-COM_Harvester_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -300,7 +333,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_NotifyComp_LogLevel",strlen("X_RDKCENTRAL-COM_NotifyComp_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -314,7 +349,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PowerMgr_LogLevel",strlen("X_RDKCENTRAL-COM_PowerMgr_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -328,7 +365,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_EthAgent_LogLevel",strlen("X_RDKCENTRAL-COM_EthAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -342,7 +381,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_FSC_LogLevel",strlen("X_RDKCENTRAL-COM_FSC_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -356,7 +397,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_Mesh_LogLevel",strlen("X_RDKCENTRAL-COM_Mesh_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -370,7 +413,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_MeshService_LogLevel",strlen("X_RDKCENTRAL-COM_MeshService_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
         	syscfg_get( NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf, sizeof(buf));
         	if( buf[0] != "\0" )
@@ -384,7 +429,9 @@ LogAgent_GetParamUlongValue
         	}
         	return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel",strlen("X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = TELCOVOIPAGENT_RDKLogLevel;
             return TRUE;
@@ -453,6 +500,8 @@ LogAgent_SetParamUlongValue
     )
 {
     ULONG                           i               = 0;
+    errno_t rc       = -1;
+    int     ind      = -1;
 	/*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
 /*
 	if( AnscEqualString(ParamName, "loglevel", TRUE))
@@ -463,12 +512,20 @@ LogAgent_SetParamUlongValue
 	}
 */
 
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_LogLevel",strlen("X_RDKCENTRAL-COM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if ( RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
+
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -487,12 +544,20 @@ LogAgent_SetParamUlongValue
 		}
 		return TRUE;
 	}
-	if( AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_TR69_LogLevel",strlen("X_RDKCENTRAL-COM_TR69_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (TR69_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
+
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -512,12 +577,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(TR069_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PAM_LogLevel",strlen("X_RDKCENTRAL-COM_PAM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
 		char buf[8];
 		if (PAM_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -537,12 +609,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(PAM_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PSM_LogLevel",strlen("X_RDKCENTRAL-COM_PSM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (PSM_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -562,12 +641,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(PSM_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_MTA_LogLevel",strlen("X_RDKCENTRAL-COM_MTA_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (MTA_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -587,12 +673,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(MTA_PROC_NAME);
 		return TRUE;
         }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_CM_LogLevel",strlen("X_RDKCENTRAL-COM_CM_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
 		char buf[8];
 		if (CM_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CM_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -612,12 +705,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(CM_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_WiFi_LogLevel",strlen("X_RDKCENTRAL-COM_WiFi_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (WiFi_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -639,12 +739,19 @@ LogAgent_SetParamUlongValue
 #endif
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_CR_LogLevel",strlen("X_RDKCENTRAL-COM_CR_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (CR_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CR_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -665,13 +772,21 @@ LogAgent_SetParamUlongValue
 	}
 
 /*Added for RDKB-4343*/
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_Harvester_LogLevel",strlen("X_RDKCENTRAL-COM_Harvester_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (Harvester_RDKLogLevel != uValue)
 		{
 			printf("Setting Harvester_RDKLogLevel to %d\n",Harvester_RDKLogLevel);
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
+			
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -692,12 +807,19 @@ LogAgent_SetParamUlongValue
 		}
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_NotifyComp_LogLevel",strlen("X_RDKCENTRAL-COM_NotifyComp_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (NOTIFY_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", buf) != 0) 
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -717,12 +839,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_PowerMgr_LogLevel",strlen("X_RDKCENTRAL-COM_PowerMgr_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8]={ 0 };
 		if (PWRMGR_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", buf) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -742,12 +871,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(PWRMGR_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_FSC_LogLevel",strlen("X_RDKCENTRAL-COM_FSC_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8]={ 0 };
 		if (FSC_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", buf) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -767,12 +903,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(FSC_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_EthAgent_LogLevel",strlen("X_RDKCENTRAL-COM_EthAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		if (ETHAGENT_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", buf) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -792,12 +935,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(ETHAGENT_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_Mesh_LogLevel",strlen("X_RDKCENTRAL-COM_Mesh_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
         	char buf[8]={ 0 };
 		if (MESH_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", buf) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -817,12 +967,19 @@ LogAgent_SetParamUlongValue
 		SendSignal(MESH_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_MeshService_LogLevel",strlen("X_RDKCENTRAL-COM_MeshService_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
 	{
 		char buf[8]={ 0 };
 		if (MeshService_RDKLogLevel != uValue)
 		{
-			snprintf(buf,sizeof(buf),"%d",uValue);
+                        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+                        if(rc < EOK)
+                        {
+                            ERR_CHK(rc);
+                            return FALSE;
+                        }
 			if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", buf) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
@@ -843,11 +1000,18 @@ LogAgent_SetParamUlongValue
 	}
 
 #if defined(_HUB4_PRODUCT_REQ_)
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel",strlen("X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         TELCOVOIPAGENT_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%d",uValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",uValue);
+        if(rc < EOK)
+        {
+           ERR_CHK(rc);
+           return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", buf) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
@@ -1083,38 +1247,66 @@ LogAgent_GetParamStringValue
     )
 {
     char str[24];
+    errno_t rc       = -1;
+    int     ind      = -1;
    
     /* check the parameter name and set the corresponding value */
-    if( AnscEqualString(ParamName, "WifiLogMsg", TRUE))
+    rc = strcmp_s("WifiLogMsg",strlen("WifiLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK)) 
     {
         //printf("$$$$ Inside LogAgent_GetParamStringValue for WiFiLogMsg\n");
-		AnscCopyString(str, "WiFiLogMsg");
-        AnscCopyString(pValue, str);
+        rc  = strcpy_s(pValue, *pUlSize, "WiFiLogMsg");
+        if(rc != EOK)
+        {
+             ERR_CHK(rc);
+             return -1;
+        }
         return 0;
     }
 /*Added for rdkb-4343*/
-    if( AnscEqualString(ParamName, "HarvesterLogMsg", TRUE))
+    rc = strcmp_s("HarvesterLogMsg",strlen("HarvesterLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK)) 
     {
         //printf("$$$$ Inside LogAgent_GetParamStringValue for HarvesterLogMsg\n");
-		AnscCopyString(str, "HarvesterLogMsg");
-        AnscCopyString(pValue, str);
+        rc  = strcpy_s(pValue, *pUlSize, "HarvesterLogMsg");
+        if(rc != EOK)
+        {
+              ERR_CHK(rc);
+              return -1;
+        }
+
         return 0;
     }
 
 /*rdkb-4776*/
-    if( AnscEqualString(ParamName, "WifiEventLogMsg", TRUE))
+    rc = strcmp_s("WifiEventLogMsg",strlen("WifiEventLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	//printf("$$$$Inside WifiEventLogMsg Returning true\n");
-        AnscCopyString(str, "WifiEventLogMsg");
-        AnscCopyString(pValue, str);
+        rc  = strcpy_s(pValue, *pUlSize, "WifiEventLogMsg");
+        if(rc != EOK)
+        {
+              ERR_CHK(rc);
+              return -1;
+        }
+
         return 0;
     }
-
-    if( AnscEqualString(ParamName, "HarvesterEventLogMsg", TRUE))
+    rc = strcmp_s("HarvesterEventLogMsg",strlen("HarvesterEventLogMsg"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	//printf("$$$$Inside HarvesterEventLogMsg Returning true\n");
-        AnscCopyString(str, "HarvesterEventLogMsg");
-        AnscCopyString(pValue, str);
+        rc  = strcpy_s(pValue, *pUlSize, "HarvesterEventLogMsg");
+        if(rc != EOK)
+        {
+              ERR_CHK(rc);
+              return -1;
+        }
+
         return 0;
     }
 /*changes end here*/
@@ -1163,7 +1355,11 @@ LogAgent_GetParamBoolValue
 {
     /* check the parameter name and return the corresponding value */
     char buf[5] = {0};
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LoggerEnable", TRUE))
+    errno_t rc       = -1;
+    int     ind      = -1;
+    rc = strcmp_s("X_RDKCENTRAL-COM_LoggerEnable",strlen("X_RDKCENTRAL-COM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
     	syscfg_get( NULL, "X_RDKCENTRAL-COM_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1177,7 +1373,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TR69_LoggerEnable",strlen("X_RDKCENTRAL-COM_TR69_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
     	syscfg_get( NULL, "X_RDKCENTRAL-COM_TR69_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1191,7 +1389,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PAM_LoggerEnable",strlen("X_RDKCENTRAL-COM_PAM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_PAM_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1205,7 +1405,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PSM_LoggerEnable",strlen("X_RDKCENTRAL-COM_PSM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_PSM_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1219,7 +1421,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_MTA_LoggerEnable",strlen("X_RDKCENTRAL-COM_MTA_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_MTA_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1233,7 +1437,10 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_CM_LoggerEnable",strlen("X_RDKCENTRAL-COM_CM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
+
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_CM_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1247,7 +1454,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_WiFi_LoggerEnable",strlen("X_RDKCENTRAL-COM_WiFi_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1261,7 +1470,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_CR_LoggerEnable",strlen("X_RDKCENTRAL-COM_CR_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_CR_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1275,7 +1486,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_Harvester_LoggerEnable",strlen("X_RDKCENTRAL-COM_Harvester_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 	syscfg_get( NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", buf, sizeof(buf));
     	if( buf[0] != "\0" )
@@ -1289,7 +1502,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_NotifyComp_LoggerEnable",strlen("X_RDKCENTRAL-COM_NotifyComp_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1303,7 +1518,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PowerMgr_LoggerEnable",strlen("X_RDKCENTRAL-COM_PowerMgr_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1317,7 +1534,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_EthAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_EthAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1331,7 +1550,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_FSC_LoggerEnable",strlen("X_RDKCENTRAL-COM_FSC_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1345,7 +1566,9 @@ LogAgent_GetParamBoolValue
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_Mesh_LoggerEnable",strlen("X_RDKCENTRAL-COM_Mesh_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1355,11 +1578,13 @@ LogAgent_GetParamBoolValue
 	}
 	else
         {
-            	AnscTraceWarning(("Error in syscfg_get for Mesh_LoggerEnable\n"));
+            AnscTraceWarning(("Error in syscfg_get for Mesh_LoggerEnable\n")); 
         }
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_MeshService_LoggerEnable",strlen("X_RDKCENTRAL-COM_MeshService_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         syscfg_get( NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", buf, sizeof(buf));
         if( buf[0] != "\0" )
@@ -1374,7 +1599,9 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = TELCOVOIPAGENT_RDKLogEnable;
         return TRUE;
@@ -1408,11 +1635,22 @@ LogAgent_SetParamBoolValue
     )
 {
     /* check the parameter name and set the corresponding value */
-		if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_LoggerEnable", TRUE))
+    errno_t rc       = -1;
+    int     ind      = -1;
+    rc = strcmp_s("X_RDKCENTRAL-COM_LoggerEnable",strlen("X_RDKCENTRAL-COM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
+                errno_t                         rc       = -1;
+
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+           ERR_CHK(rc);
+           return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_LoggerEnable", buf) != 0) 
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1446,11 +1684,18 @@ LogAgent_SetParamBoolValue
 #endif																				
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TR69_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TR69_LoggerEnable",strlen("X_RDKCENTRAL-COM_TR69_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		TR69_RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+           ERR_CHK(rc);
+           return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TR69_LoggerEnable", buf) != 0) 
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1465,11 +1710,18 @@ LogAgent_SetParamBoolValue
 		SendSignal(TR069_PROC_NAME);
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PAM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PAM_LoggerEnable",strlen("X_RDKCENTRAL-COM_PAM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		PAM_RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
+            rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+            if(rc < EOK)
+            {
+                ERR_CHK(rc);
+                return FALSE;
+            }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PAM_LoggerEnable", buf) != 0) 
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1484,11 +1736,18 @@ LogAgent_SetParamBoolValue
 		SendSignal(PAM_PROC_NAME);
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PSM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PSM_LoggerEnable",strlen("X_RDKCENTRAL-COM_PSM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
 	{
 		char buf[8];
 		PSM_RDKLogEnable = bValue;
-		snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PSM_LoggerEnable", buf) != 0) 
 		{
 			 AnscTraceWarning(("syscfg_set failed\n"));
@@ -1503,11 +1762,18 @@ LogAgent_SetParamBoolValue
 		SendSignal(PSM_PROC_NAME);
 		return TRUE;
 	}
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MTA_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_MTA_LoggerEnable",strlen("X_RDKCENTRAL-COM_MTA_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		MTA_RDKLogEnable = bValue;
-		snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MTA_LoggerEnable", buf) != 0) 
 		{
 			 AnscTraceWarning(("syscfg_set failed\n"));
@@ -1522,11 +1788,18 @@ LogAgent_SetParamBoolValue
 		SendSignal(MTA_PROC_NAME);
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CM_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_CM_LoggerEnable",strlen("X_RDKCENTRAL-COM_CM_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		CM_RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CM_LoggerEnable", buf) != 0) 
 		{
 			AnscTraceWarning(("syscfg_set failed\n"));
@@ -1541,11 +1814,18 @@ LogAgent_SetParamBoolValue
 		SendSignal(CM_PROC_NAME);
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_WiFi_LoggerEnable",strlen("X_RDKCENTRAL-COM_WiFi_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		WiFi_RDKLogEnable = bValue;
-		snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", buf) != 0) 
 		{
 			AnscTraceWarning(("syscfg_set failed\n"));
@@ -1562,11 +1842,18 @@ LogAgent_SetParamBoolValue
 #endif
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_CR_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_CR_LoggerEnable",strlen("X_RDKCENTRAL-COM_CR_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		CR_RDKLogEnable = bValue;
-		snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CR_LoggerEnable", buf) != 0) 
 		{
 		 	AnscTraceWarning(("syscfg_set failed\n"));
@@ -1580,12 +1867,20 @@ LogAgent_SetParamBoolValue
 		}
 		return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_Harvester_LoggerEnable",strlen("X_RDKCENTRAL-COM_Harvester_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		Harvester_RDKLogEnable = bValue;
 		printf("$$$$ Harvester_RDKLogEnable = %d\n",Harvester_RDKLogEnable);
-		snprintf(buf,sizeof(buf),"%d",bValue);
+                rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+                if(rc < EOK)
+                {
+                    ERR_CHK(rc);
+                    return FALSE;
+                }
+		
 		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", buf) != 0) 
 		{
 		 	AnscTraceWarning(("syscfg_set failed\n"));
@@ -1601,11 +1896,18 @@ LogAgent_SetParamBoolValue
 		}
 		return TRUE;
     }
-	if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_NotifyComp_LoggerEnable",strlen("X_RDKCENTRAL-COM_NotifyComp_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
 		char buf[8];
 		NOTIFY_RDKLogEnable = bValue;
-	    snprintf(buf,sizeof(buf),"%d",bValue);
+            rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+            if(rc < EOK)
+            {
+                ERR_CHK(rc);
+                return FALSE;
+            }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", buf) != 0) 
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1620,12 +1922,19 @@ LogAgent_SetParamBoolValue
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
     }
+    rc = strcmp_s("X_RDKCENTRAL-COM_PowerMgr_LoggerEnable",strlen("X_RDKCENTRAL-COM_PowerMgr_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", TRUE))
     {
         char buf[8];
         PWRMGR_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1640,12 +1949,18 @@ LogAgent_SetParamBoolValue
         SendSignal(PWRMGR_PROC_NAME);
         return TRUE;
     }
-
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FSC_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_FSC_LoggerEnable",strlen("X_RDKCENTRAL-COM_FSC_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         FSC_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1660,11 +1975,18 @@ LogAgent_SetParamBoolValue
         SendSignal(FSC_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_Mesh_LoggerEnable",strlen("X_RDKCENTRAL-COM_Mesh_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         MESH_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1679,11 +2001,18 @@ LogAgent_SetParamBoolValue
         SendSignal(MESH_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_MeshService_LoggerEnable",strlen("X_RDKCENTRAL-COM_MeshService_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         MeshService_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1698,11 +2027,18 @@ LogAgent_SetParamBoolValue
         return TRUE;
     }
 
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_EthAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_EthAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         ETHAGENT_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc);
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", buf) != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
@@ -1719,11 +2055,18 @@ LogAgent_SetParamBoolValue
     }
 
 #if defined(_HUB4_PRODUCT_REQ_)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         TELCOVOIPAGENT_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
+        rc = sprintf_s(buf,sizeof(buf),"%d",bValue);
+        if(rc < EOK)
+        {
+            ERR_CHK(rc); 
+            return FALSE;
+        }
         if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", buf) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
