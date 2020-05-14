@@ -44,6 +44,7 @@
 #include "ssp_global.h"
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
+#include "safec_lib_common.h"
 
 #define DEBUG_INI_NAME "/etc/debug.ini"
 #define MAX_SUBSYSTEM_SIZE 32
@@ -65,15 +66,14 @@ int  cmd_dispatch(int  command)
 
             {
                 char                            CName[256];
+                errno_t                         rc       = -1;
 
-                if ( g_Subsystem[0] != 0 )
-                {
-                    _ansc_sprintf(CName, "%s%s", g_Subsystem, CCSP_COMPONENT_ID_LOGAGENT);
-                }
-                else
-                {
-                    _ansc_sprintf(CName, "%s", CCSP_COMPONENT_ID_LOGAGENT);
-                }
+                    rc = sprintf_s(CName, sizeof(CName), "%s%s", g_Subsystem, CCSP_COMPONENT_ID_LOGAGENT);
+                    if(rc < EOK)
+                    {
+                        ERR_CHK(rc);
+                        return -1;
+                    }
 
                 ssp_Mbi_MessageBusEngage
                     ( 
@@ -457,31 +457,45 @@ int main(int argc, char* argv[])
     BOOL                            bRunAsDaemon       = TRUE;
     int                             cmdChar            = 0;
     int                             idx = 0;
-	char                            cmd[1024]          = {0};
     FILE                           *fd                 = NULL;
 
     extern ANSC_HANDLE bus_handle;
     char *subSys            = NULL;  
     DmErr_t    err;
+    errno_t rc       = -1;
+    int     ind      = -1;
    
 
     for (idx = 1; idx < argc; idx++)
     {
-        if ( (strcmp(argv[idx], "-subsys") == 0) )
+        rc = strcmp_s("-subsys",strlen("-subsys"),argv[idx],&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK)) 
         {
             /* Coverity  Fix CID: 135488 STRING_SIZE */
             if( idx + 1 < argc )
             {
-                AnscCopyString(g_Subsystem, argv[idx+1]);
+                rc = strcpy_s(g_Subsystem,sizeof(g_Subsystem), argv[idx+1]);
+                if(rc != EOK)
+                {
+                    ERR_CHK(rc);
+                    return ANSC_STATUS_FAILURE;
+                 }
             }
             else
             {
                 fprintf(stderr, "idx+1  exceeds argc  \n");
             }
         }
-        else if ( strcmp(argv[idx], "-c") == 0 )
+        
+        else 
         {
-            bRunAsDaemon = FALSE;
+            rc = strcmp_s( "-c",strlen( "-c"),argv[idx],&ind);
+            ERR_CHK(rc);
+            if ((!ind) && (rc == EOK))
+            {
+               bRunAsDaemon = FALSE;
+            }
         }
     }
 
@@ -509,12 +523,9 @@ int main(int argc, char* argv[])
         CcspTraceWarning(("Create /var/tmp/log_agent.pid error. \n"));
         return 1;
     }
-    else
-    {
-        sprintf(cmd, "%d", getpid());
-        fputs(cmd, fd);
-        fclose(fd);
-    }
+
+    fprintf(fd, "%d", getpid());
+    fclose(fd);
 
     signal(SIGTERM, sig_handler);
     signal(SIGINT, sig_handler);

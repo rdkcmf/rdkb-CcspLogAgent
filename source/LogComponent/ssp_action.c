@@ -54,6 +54,7 @@
 #include "dslh_dmagnt_interface.h"
 #include "ccsp_trace.h"
 #include "dm_pack_create_func.h"
+#include "safec_lib_common.h"
 
 PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController        = NULL;
 PCOMPONENT_COMMON_LOGAGENT          g_pComponent_COMMON_logagent  = NULL;
@@ -72,6 +73,7 @@ ssp_create
     )
 {
     /* Create component common data model object */
+      errno_t rc = -1;
 
      g_pComponent_COMMON_logagent = (PCOMPONENT_COMMON_LOGAGENT)AnscAllocateMemory(sizeof(COMPONENT_COMMON_LOGAGENT));
 
@@ -97,8 +99,14 @@ ssp_create
         }
         else
         {
-            AnscCopyString(pSsdCcdIf->Name, CCSP_CCD_INTERFACE_NAME);
+            rc = strcpy_s(pSsdCcdIf->Name,sizeof(pSsdCcdIf->Name), CCSP_CCD_INTERFACE_NAME);
 
+            if(rc != EOK)
+            {
+                ERR_CHK(rc);
+                return ANSC_STATUS_FAILURE;
+            }
+            
             pSsdCcdIf->InterfaceId              = CCSP_CCD_INTERFACE_ID;
             pSsdCcdIf->hOwnerContext            = NULL;
             pSsdCcdIf->Size                     = sizeof(CCSP_CCD_INTERFACE);
@@ -130,8 +138,14 @@ ssp_create
         }
         else
         {
-            AnscCopyString(pDslhLcbIf->Name, CCSP_LIBCBK_INTERFACE_NAME);
+            rc = strcpy_s(pDslhLcbIf->Name,sizeof(pDslhLcbIf->Name), CCSP_LIBCBK_INTERFACE_NAME);
+            
 
+            if(rc != EOK)
+            {
+                ERR_CHK(rc);
+                return ANSC_STATUS_FAILURE;
+            }
             pDslhLcbIf->InterfaceId              = CCSP_LIBCBK_INTERFACE_ID;
             pDslhLcbIf->hOwnerContext            = NULL;
             pDslhLcbIf->Size                     = sizeof(DSLH_LCB_INTERFACE);
@@ -160,6 +174,8 @@ ssp_engage
 	ANSC_STATUS					    returnStatus                = ANSC_STATUS_SUCCESS;
     PCCC_MBI_INTERFACE              pSsdMbiIf                   = (PCCC_MBI_INTERFACE)MsgHelper_CreateCcdMbiIf((void*)bus_handle, g_Subsystem);
     char                            CrName[256];
+    errno_t                         rc       = -1;
+
 
      g_pComponent_COMMON_logagent->Health = CCSP_COMMON_COMPONENT_HEALTH_Yellow;
 
@@ -170,14 +186,12 @@ ssp_engage
     pDslhCpeController->SetDbusHandle((ANSC_HANDLE)pDslhCpeController, (ANSC_HANDLE)bus_handle);
     pDslhCpeController->Engage((ANSC_HANDLE)pDslhCpeController);
 
-    if ( g_Subsystem[0] != 0 )
-    {
-        _ansc_sprintf(CrName, "%s%s", g_Subsystem, CCSP_DBUS_INTERFACE_CR);
-    }
-    else
-    {
-        _ansc_sprintf(CrName, "%s", CCSP_DBUS_INTERFACE_CR);
-    }
+       rc = sprintf_s(CrName,sizeof(CrName), "%s%s", g_Subsystem, CCSP_DBUS_INTERFACE_CR);
+       if(rc < EOK)
+       {
+           ERR_CHK(rc);
+           return ANSC_STATUS_FAILURE;
+       }
 
     returnStatus =
         pDslhCpeController->RegisterCcspDataModel2
@@ -209,22 +223,26 @@ ssp_cancel
 	int                             nRet  = 0;
     char                            CrName[256];
     char                            CpName[256];
+    errno_t                         rc       = -1;
 
     if(  g_pComponent_COMMON_logagent == NULL)
     {
         return ANSC_STATUS_SUCCESS;
     }
 
-    if ( g_Subsystem[0] != 0 )
-    {
-        _ansc_sprintf(CrName, "%s%s", g_Subsystem, CCSP_DBUS_INTERFACE_CR);
-        _ansc_sprintf(CpName, "%s%s", g_Subsystem, CCSP_COMPONENT_NAME_LOGAGENT);
-    }
-    else
-    {
-        _ansc_sprintf(CrName, "%s", CCSP_DBUS_INTERFACE_CR);
-        _ansc_sprintf(CpName, "%s", CCSP_COMPONENT_NAME_LOGAGENT);
-    }
+        rc = sprintf_s(CrName, sizeof(CrName), "%s%s", g_Subsystem, CCSP_DBUS_INTERFACE_CR);
+        if(rc < EOK)
+        {
+           ERR_CHK(rc);
+           return ANSC_STATUS_FAILURE;
+        }
+
+        rc = sprintf_s(CpName, sizeof(CpName), "%s%s", g_Subsystem, CCSP_COMPONENT_NAME_LOGAGENT);
+        if(rc < EOK)
+        {
+           ERR_CHK(rc);
+           return ANSC_STATUS_FAILURE;
+        }
     /* unregister component */
     nRet = CcspBaseIf_unregisterComponent(bus_handle, CrName, CpName );  
     AnscTrace("unregisterComponent returns %d\n", nRet);
