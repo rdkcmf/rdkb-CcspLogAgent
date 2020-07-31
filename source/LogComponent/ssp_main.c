@@ -45,6 +45,7 @@
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
 #include "safec_lib_common.h"
+#include <syscfg/syscfg.h>
 
 #define DEBUG_INI_NAME "/etc/debug.ini"
 #define MAX_SUBSYSTEM_SIZE 32
@@ -141,7 +142,7 @@ static void _print_stack_backtrace(void)
 
 #if defined(_ANSC_LINUX)
 static void daemonize(void) {
-	int fd;
+
        /* initialize semaphores for shared processes */
         sem = sem_open ("pSemLog", O_CREAT | O_EXCL, 0644, 0);
         if(SEM_FAILED == sem)
@@ -179,7 +180,7 @@ static void daemonize(void) {
 
 
 #ifndef  _DEBUG
-
+    int fd;
 	fd = open("/dev/null", O_RDONLY);
 	if (fd != 0) {
 		dup2(fd, 0);
@@ -453,7 +454,6 @@ void ReadLogInfo()
 }
 int main(int argc, char* argv[])
 {
-    ANSC_STATUS                     returnStatus       = ANSC_STATUS_SUCCESS;
     BOOL                            bRunAsDaemon       = TRUE;
     int                             cmdChar            = 0;
     int                             idx = 0;
@@ -515,8 +515,10 @@ int main(int argc, char* argv[])
     }
 #elif defined(_ANSC_LINUX)
     if ( bRunAsDaemon ) 
+    {
         daemonize();
-	
+    }
+    
 	fd = fopen("/var/tmp/log_agent.pid", "w+");
     if ( !fd )
     {
@@ -558,7 +560,10 @@ int main(int argc, char* argv[])
     RDK_LOGGER_INIT();
 #endif
 	
-    system("touch /tmp/logagent_initialized");
+    if (system("touch /tmp/logagent_initialized") == -1 )
+    {
+        printf("Failed to create /tmp/logagent_initialized file.\n");
+    }
 
     if ( bRunAsDaemon )
     {

@@ -92,7 +92,7 @@ COSA_IsObjectSupported
         char*                        pObjName
     )
 {
-    
+    UNREFERENCED_PARAMETER(pObjName);
     return TRUE;
 }
 
