@@ -419,6 +419,27 @@ void ReadLogInfo()
             TELCOVOIPAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
 #endif /* _HUB4_PRODUCT_REQ_ */
+
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XDSLManager_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XDSLManager_RDKLogEnable = (BOOL)atoi(buf);
+        }
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANMANAGER_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANMANAGER_RDKLogEnable = (BOOL)atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {

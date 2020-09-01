@@ -40,6 +40,9 @@
 #define MESH_PROC_NAME "meshAgent"
 #define ETHAGENT_PROC_NAME "CcspEthAgent"
 #define TELCOVOIPAGENT_PROC_NAME "telcovoip_agent"
+#define XDSLMANAGER_PROC_NAME "xdslmanager"
+#define VLANMANAGER_PROC_NAME "VlanManager"
+
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
 #define LOGAGENT_MAX_BUF_SIZE      241
@@ -341,6 +344,16 @@ LogAgent_GetParamUlongValue
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", TRUE))
         {
             *puLong  = TELCOVOIPAGENT_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+        {
+            *puLong  = XDSLManager_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+        {
+            *puLong  = VLANMANAGER_RDKLogLevel;
             return TRUE;
         }
         return FALSE;
@@ -803,6 +816,45 @@ LogAgent_SetParamUlongValue
     }
 #endif /* _HUB4_PRODUCT_REQ_ */
 
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        XDSLManager_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(XDSLMANAGER_PROC_NAME);
+        return TRUE;
+    }
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        VLANMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
+
 	return FALSE;
 }
      
@@ -1259,6 +1311,17 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    {
+        *pBool  = XDSLManager_RDKLogEnable;
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    {
+        *pBool  = VLANMANAGER_RDKLogEnable;
+        return TRUE;
+    }
+
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -1602,6 +1665,45 @@ LogAgent_SetParamBoolValue
         return TRUE;
     }
 #endif /* _HUB4_PRODUCT_REQ_ */
+
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        XDSLManager_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(XDSLMANAGER_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        VLANMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
 
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
