@@ -42,6 +42,7 @@
 #define TELCOVOIPAGENT_PROC_NAME "telcovoip_agent"
 #define XDSLMANAGER_PROC_NAME "xdslmanager"
 #define VLANMANAGER_PROC_NAME "VlanManager"
+#define PPPMANAGER_PROC_NAME "pppmanager"
 
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
@@ -354,6 +355,11 @@ LogAgent_GetParamUlongValue
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
         {
             *puLong  = VLANMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+        {
+            *puLong  = PPPMANAGER_RDKLogLevel;
             return TRUE;
         }
         return FALSE;
@@ -854,6 +860,25 @@ LogAgent_SetParamUlongValue
         SendSignal(VLANMANAGER_PROC_NAME);
         return TRUE;
     }
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        PPPMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(PPPMANAGER_PROC_NAME);
+        return TRUE;
+    }
 
 	return FALSE;
 }
@@ -1321,6 +1346,11 @@ LogAgent_GetParamBoolValue
         *pBool  = VLANMANAGER_RDKLogEnable;
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    {
+        *pBool  = PPPMANAGER_RDKLogEnable;
+        return TRUE;
+    }
 
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
@@ -1702,6 +1732,25 @@ LogAgent_SetParamBoolValue
             }
         }
         SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        PPPMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(PPPMANAGER_PROC_NAME);
         return TRUE;
     }
 

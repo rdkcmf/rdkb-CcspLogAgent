@@ -440,6 +440,16 @@ void ReadLogInfo()
         {
             VLANMANAGER_RDKLogEnable = (BOOL)atoi(buf);
         }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PPPMANAGER_RDKLogEnable = (BOOL)atoi(buf);
+        }
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PPPMANAGER_RDKLogLevel = atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {
