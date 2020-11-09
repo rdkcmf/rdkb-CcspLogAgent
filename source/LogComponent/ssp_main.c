@@ -419,6 +419,37 @@ void ReadLogInfo()
             TELCOVOIPAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
 #endif /* _HUB4_PRODUCT_REQ_ */
+
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            DSLAGENT_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            DSLAGENT_RDKLogEnable = (BOOL)atoi(buf);
+        }
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANAGENT_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANAGENT_RDKLogEnable = (BOOL)atoi(buf);
+        }
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XTMAGENT_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XTMAGENT_RDKLogEnable = (BOOL)atoi(buf);
+        }
 }
 int main(int argc, char* argv[])
 {
