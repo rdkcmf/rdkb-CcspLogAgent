@@ -254,6 +254,42 @@
             <syntax>bool</syntax>
             <writable>true</writable>
         </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_DSLAgent_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_DSLAgent_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_VLANAgent_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_VLANAgent_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_XTMAgent_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_XTMAgent_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
       </parameters>
     </object>
  </objects>
