@@ -43,6 +43,7 @@
 #define XDSLMANAGER_PROC_NAME "xdslmanager"
 #define VLANMANAGER_PROC_NAME "VlanManager"
 #define PPPMANAGER_PROC_NAME "pppmanager"
+#define TELCOVOICEMANAGER_PROC_NAME "telcovoicemanager"
 
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
@@ -360,6 +361,11 @@ LogAgent_GetParamUlongValue
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
         {
             *puLong  = PPPMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+        {
+            *puLong  = TELCOVOICEMANAGER_RDKLogLevel;
             return TRUE;
         }
         return FALSE;
@@ -879,6 +885,25 @@ LogAgent_SetParamUlongValue
         SendSignal(PPPMANAGER_PROC_NAME);
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        TELCOVOICEMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOICEMANAGER_PROC_NAME);
+        return TRUE;
+    }
 
 	return FALSE;
 }
@@ -1351,6 +1376,12 @@ LogAgent_GetParamBoolValue
         *pBool  = PPPMANAGER_RDKLogEnable;
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    {
+        *pBool  = TELCOVOICEMANAGER_RDKLogEnable;
+        return TRUE;
+    }
+
 
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
@@ -1753,7 +1784,25 @@ LogAgent_SetParamBoolValue
         SendSignal(PPPMANAGER_PROC_NAME);
         return TRUE;
     }
-
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        TELCOVOICEMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOICEMANAGER_PROC_NAME);
+        return TRUE;
+    }
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }

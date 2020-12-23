@@ -420,7 +420,7 @@ void ReadLogInfo()
         }
 #endif /* _HUB4_PRODUCT_REQ_ */
 
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf, sizeof(buf));
+	    syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             XDSLManager_RDKLogLevel = atoi(buf);
@@ -430,7 +430,7 @@ void ReadLogInfo()
         {
             XDSLManager_RDKLogEnable = (BOOL)atoi(buf);
         }
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf, sizeof(buf));
+	    syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             VLANMANAGER_RDKLogLevel = atoi(buf);
@@ -445,10 +445,20 @@ void ReadLogInfo()
         {
             PPPMANAGER_RDKLogEnable = (BOOL)atoi(buf);
         }
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf, sizeof(buf));
+	    syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             PPPMANAGER_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOICEMANAGER_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOICEMANAGER_RDKLogEnable = (BOOL)atoi(buf);
         }
 }
 int main(int argc, char* argv[])
