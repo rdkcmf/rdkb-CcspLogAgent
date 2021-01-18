@@ -440,6 +440,16 @@ void ReadLogInfo()
         {
             VLANMANAGER_RDKLogEnable = (BOOL)atoi(buf);
         }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FWUPGRADEMGR_RDKLogEnable = (BOOL)atoi(buf);
+        }
+	    syscfg_get( NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FWUPGRADEMGR_RDKLogLevel = atoi(buf);
+        }
         syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", buf, sizeof(buf));
         if( buf != NULL )
         {

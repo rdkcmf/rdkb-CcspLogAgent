@@ -42,6 +42,7 @@
 #define TELCOVOIPAGENT_PROC_NAME "telcovoip_agent"
 #define XDSLMANAGER_PROC_NAME "xdslmanager"
 #define VLANMANAGER_PROC_NAME "VlanManager"
+#define FWUPGRADEMANAGER_PROC_NAME "fwupgrademanager"
 #define PPPMANAGER_PROC_NAME "pppmanager"
 
 /*RDKB-7469, CID-33124, defines*/
@@ -355,6 +356,11 @@ LogAgent_GetParamUlongValue
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
         {
             *puLong  = VLANMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+        {
+            *puLong  = FWUPGRADEMGR_RDKLogLevel;
             return TRUE;
         }
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
@@ -860,6 +866,25 @@ LogAgent_SetParamUlongValue
         SendSignal(VLANMANAGER_PROC_NAME);
         return TRUE;
     }
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        FWUPGRADEMGR_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%d",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(FWUPGRADEMANAGER_PROC_NAME);
+        return TRUE;
+    }
    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
     {
         char buf[8]={ 0 };
@@ -1346,6 +1371,11 @@ LogAgent_GetParamBoolValue
         *pBool  = VLANMANAGER_RDKLogEnable;
         return TRUE;
     }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    {
+        *pBool  = FWUPGRADEMGR_RDKLogEnable;
+        return TRUE;
+    }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
     {
         *pBool  = PPPMANAGER_RDKLogEnable;
@@ -1732,6 +1762,25 @@ LogAgent_SetParamBoolValue
             }
         }
         SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        FWUPGRADEMGR_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(FWUPGRADEMANAGER_PROC_NAME);
         return TRUE;
     }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))

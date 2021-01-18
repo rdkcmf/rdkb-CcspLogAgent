@@ -285,6 +285,18 @@
             <writable>true</writable>
         </parameter>
         <parameter>
+            <name>X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel</name>
+            <type>unsignedInt</type>
+            <syntax>uint32</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
+            <name>X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable</name>
+            <type>boolean</type>
+            <syntax>bool</syntax>
+            <writable>true</writable>
+        </parameter>
+        <parameter>
             <name>X_RDKCENTRAL-COM_PppManager_LogLevel</name>
             <type>unsignedInt</type>
             <syntax>uint32</syntax>
