@@ -30,11 +30,7 @@
 #define CM_PROC_NAME "CcspCMAgentSsp"
 #define PSM_PROC_NAME "PsmSsp"
 #define PAM_PROC_NAME "CcspPandMSsp"
-#if defined(_PLATFORM_RASPBERRYPI_)
-#define WIFI_PROC_NAME "wifilog_agent"
-#else
 #define WIFI_PROC_NAME "CcspWifiSsp"
-#endif
 #define Harvester_PROC_NAME "harvester"
 #define NOTIFY_PROC_NAME "notify_comp"
 #define PWRMGR_PROC_NAME "rdkbPowerManager"
