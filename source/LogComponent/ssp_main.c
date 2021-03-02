@@ -420,8 +420,65 @@ void ReadLogInfo()
             TELCOVOIPAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
 #endif /* _HUB4_PRODUCT_REQ_ */
-
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", buf, sizeof(buf));
+#if defined (FEATURE_RDKB_WAN_MANAGER)
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANMANAGER_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            VLANMANAGER_RDKLogEnable = (BOOL)atoi(buf);
+        }
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XDSLManager_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            XDSLManager_RDKLogEnable = (BOOL)atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PPPMANAGER_RDKLogEnable = (BOOL)atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            PPPMANAGER_RDKLogLevel = atoi(buf);
+        }
+#endif
+#if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOICEMANAGER_RDKLogLevel = atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            TELCOVOICEMANAGER_RDKLogEnable = (BOOL)atoi(buf);
+        }
+#endif
+#endif	
+#if defined (FEATURE_FWUPGRADE_MANAGER)
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FWUPGRADEMGR_RDKLogEnable = (BOOL)atoi(buf);
+        }
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", buf, sizeof(buf));
+        if( buf != NULL )
+        {
+            FWUPGRADEMGR_RDKLogLevel = atoi(buf);
+        }
+#endif	
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             DSLAGENT_RDKLogLevel = atoi(buf);
@@ -431,7 +488,7 @@ void ReadLogInfo()
         {
             DSLAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", buf, sizeof(buf));
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             VLANAGENT_RDKLogLevel = atoi(buf);
@@ -441,7 +498,7 @@ void ReadLogInfo()
         {
             VLANAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
-	syscfg_get( NULL, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", buf, sizeof(buf));
+        syscfg_get( NULL, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", buf, sizeof(buf));
         if( buf != NULL )
         {
             XTMAGENT_RDKLogLevel = atoi(buf);
@@ -452,6 +509,7 @@ void ReadLogInfo()
             XTMAGENT_RDKLogEnable = (BOOL)atoi(buf);
         }
 }
+
 int main(int argc, char* argv[])
 {
     BOOL                            bRunAsDaemon       = TRUE;

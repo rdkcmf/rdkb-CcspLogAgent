@@ -39,8 +39,26 @@
 #define ETHAGENT_PROC_NAME "CcspEthAgent"
 #define TELCOVOIPAGENT_PROC_NAME "telcovoip_agent"
 #define DSLAGENT_PROC_NAME "dslagent"
-#define VLANAGENT_PROC_NAME "vlanagent"
 #define XTMAGENT_PROC_NAME "xtmagent"
+#define VLANAGENT_PROC_NAME "vlanagent"
+
+#if defined (FEATURE_RDKB_WAN_MANAGER)
+#define VLANMANAGER_PROC_NAME "VlanManager"
+
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+#define XDSLMANAGER_PROC_NAME "xdslmanager"
+#define PPPMANAGER_PROC_NAME "pppmanager"
+#endif
+
+#if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
+#define TELCOVOICEMANAGER_PROC_NAME "telcovoicemanager"
+#endif
+
+#endif
+
+#if defined (FEATURE_RDKB_FWUPGRADE_MANAGER)
+#define FWUPGRADEMANAGER_PROC_NAME "fwupgrademanager"
+#endif
 
 /*RDKB-7469, CID-33124, defines*/
 #define LOGAGENT_MAX_MSG_LENGTH    256
@@ -540,19 +558,53 @@ LogAgent_GetParamUlongValue
             *puLong  = TELCOVOIPAGENT_RDKLogLevel;
             return TRUE;
         }
+#if defined (FEATURE_RDKB_WAN_MANAGER)
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+        {
+            *puLong  = VLANMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+        {
+            *puLong  = XDSLManager_RDKLogLevel;
+            return TRUE;
+        }
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+        {
+            *puLong  = PPPMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+#endif
+#if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+        {
+            *puLong  = TELCOVOICEMANAGER_RDKLogLevel;
+            return TRUE;
+        }
+#endif
+#endif
+#if defined (FEATURE_FWUPGRADE_MANAGER)
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+        {
+            *puLong  = FWUPGRADEMGR_RDKLogLevel;
+            return TRUE;
+        }
+#endif
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", TRUE))
         {
             *puLong  = DSLAGENT_RDKLogLevel;
             return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
-        {
-            *puLong  = VLANAGENT_RDKLogLevel;
-            return TRUE;
-        }
         if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", TRUE))
         {
             *puLong  = XTMAGENT_RDKLogLevel;
+            return TRUE;
+        }	
+        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
+        {
+            *puLong  = VLANAGENT_RDKLogLevel;
             return TRUE;
         }
         return FALSE;
@@ -1135,7 +1187,114 @@ LogAgent_SetParamUlongValue
     }
 #endif /* _HUB4_PRODUCT_REQ_ */
 
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", TRUE))
+#if defined(FEATURE_RDKB_WAN_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        VLANMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
+
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        XDSLManager_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(XDSLMANAGER_PROC_NAME);
+        return TRUE;
+    }
+
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        PPPMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(PPPMANAGER_PROC_NAME);
+        return TRUE;
+    }    
+#endif
+
+#if defined(FEATURE_RDKB_TELCOVOICE_MANAGER)
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        TELCOVOICEMANAGER_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOICEMANAGER_PROC_NAME);
+        return TRUE;
+    }
+#endif
+#endif
+
+#if defined (FEATURE_RDKB_FWUPGRADE_MANAGER)
+   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        FWUPGRADEMGR_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(FWUPGRADEMANAGER_PROC_NAME);
+        return TRUE;
+    }
+#endif
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", TRUE))
     {
         char buf[8]={ 0 };
         DSLAGENT_RDKLogLevel = uValue;
@@ -1154,26 +1313,7 @@ LogAgent_SetParamUlongValue
         SendSignal(DSLAGENT_PROC_NAME);
         return TRUE;
     }
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
-    {
-        char buf[8]={ 0 };
-        VLANAGENT_RDKLogLevel = uValue;
-        snprintf(buf,sizeof(buf),"%lu",uValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        SendSignal(VLANAGENT_PROC_NAME);
-        return TRUE;
-    }
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", TRUE))
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", TRUE))
     {
         char buf[8]={ 0 };
         XTMAGENT_RDKLogLevel = uValue;
@@ -1190,6 +1330,25 @@ LogAgent_SetParamUlongValue
             }
         }
         SendSignal(XTMAGENT_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
+    {
+        char buf[8]={ 0 };
+        VLANAGENT_RDKLogLevel = uValue;
+        snprintf(buf,sizeof(buf),"%lu",uValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANAGENT_PROC_NAME);
         return TRUE;
     }
 
@@ -1719,23 +1878,57 @@ LogAgent_GetParamBoolValue
         *pBool  = TELCOVOIPAGENT_RDKLogEnable;
         return TRUE;
     }
+#if defined (FEATURE_RDKB_WAN_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    {
+        *pBool  = VLANMANAGER_RDKLogEnable;
+        return TRUE;
+    }
 
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    {
+        *pBool  = XDSLManager_RDKLogEnable;
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    {
+        *pBool  = PPPMANAGER_RDKLogEnable;
+        return TRUE;
+    }
+#endif
+
+#if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    {
+        *pBool  = TELCOVOICEMANAGER_RDKLogEnable;
+        return TRUE;
+    }
+#endif
+#endif
+
+#if defined (FEATURE_FWUPGRADE_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    {
+        *pBool  = FWUPGRADEMGR_RDKLogEnable;
+        return TRUE;
+    }
+#endif
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", TRUE))
     {
         *pBool  = DSLAGENT_RDKLogEnable;
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
-    {
-        *pBool  = VLANAGENT_RDKLogEnable;
         return TRUE;
     }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", TRUE))
     {
         *pBool  = XTMAGENT_RDKLogEnable;
         return TRUE;
-    }
-
+    }    
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
+    {
+        *pBool  = VLANAGENT_RDKLogEnable;
+        return TRUE;
+    }    
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
@@ -2204,6 +2397,112 @@ LogAgent_SetParamBoolValue
     }
 #endif /* _HUB4_PRODUCT_REQ_ */
 
+#if defined (FEATURE_RDKB_WAN_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        VLANMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANMANAGER_PROC_NAME);
+        return TRUE;
+    }
+
+#if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        XDSLManager_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(XDSLMANAGER_PROC_NAME);
+        return TRUE;
+    }
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        PPPMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(PPPMANAGER_PROC_NAME);
+        return TRUE;
+    }
+#endif
+
+#if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        TELCOVOICEMANAGER_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(TELCOVOICEMANAGER_PROC_NAME);
+        return TRUE;
+    }
+#endif
+#endif
+
+#if defined (FEATURE_RDKB_FWUPGRADE_MANAGER)
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        FWUPGRADEMGR_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(FWUPGRADEMANAGER_PROC_NAME);
+        return TRUE;
+    }
+#endif
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", TRUE))
     {
         char buf[8];
@@ -2221,25 +2520,6 @@ LogAgent_SetParamBoolValue
             }
         }
         SendSignal(DSLAGENT_PROC_NAME);
-        return TRUE;
-    }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
-    {
-        char buf[8];
-        VLANAGENT_RDKLogEnable = bValue;
-        snprintf(buf,sizeof(buf),"%d",bValue);
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", buf) != 0)
-        {
-            AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
-        }
-        SendSignal(VLANAGENT_PROC_NAME);
         return TRUE;
     }
     if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", TRUE))
@@ -2260,8 +2540,26 @@ LogAgent_SetParamBoolValue
         }
         SendSignal(XTMAGENT_PROC_NAME);
         return TRUE;
+    }    
+    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
+    {
+        char buf[8];
+        VLANAGENT_RDKLogEnable = bValue;
+        snprintf(buf,sizeof(buf),"%d",bValue);
+        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", buf) != 0)
+        {
+            AnscTraceWarning(("syscfg_set failed\n"));
+        }
+        else
+        {
+            if (syscfg_commit() != 0)
+            {
+                AnscTraceWarning(("syscfg_commit failed\n"));
+            }
+        }
+        SendSignal(VLANAGENT_PROC_NAME);
+        return TRUE;
     }
-
     /* AnscTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
