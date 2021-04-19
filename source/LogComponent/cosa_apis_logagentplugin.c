@@ -302,7 +302,7 @@ LogAgent_GetParamUlongValue
     //printf("$$$$Inside LogAgent_GetParamUlongValue in cosa_apis_logagentplugin.c\n");
         /*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
 /*
-        if( AnscEqualString(ParamName, "loglevel", TRUE))
+        if (strcmp(ParamName, "loglevel") == 0)
     {
          //printf("$$$$Inside LogAgent_GetParamUlongValue loglevel\n");
         *puLong =  &i;
@@ -559,26 +559,35 @@ LogAgent_GetParamUlongValue
             return TRUE;
         }
 #if defined (FEATURE_RDKB_WAN_MANAGER)
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_VLANManager_LogLevel",strlen("X_RDKCENTRAL-COM_VLANManager_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = VLANMANAGER_RDKLogLevel;
             return TRUE;
         }
 
 #if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_XDSLManager_LogLevel",strlen("X_RDKCENTRAL-COM_XDSLManager_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = XDSLManager_RDKLogLevel;
             return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+
+        rc = strcmp_s("X_RDKCENTRAL-COM_PppManager_LogLevel",strlen("X_RDKCENTRAL-COM_PppManager_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = PPPMANAGER_RDKLogLevel;
             return TRUE;
         }
 #endif
 #if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel",strlen("X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = TELCOVOICEMANAGER_RDKLogLevel;
             return TRUE;
@@ -586,23 +595,31 @@ LogAgent_GetParamUlongValue
 #endif
 #endif
 #if defined (FEATURE_FWUPGRADE_MANAGER)
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel",strlen("X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = FWUPGRADEMGR_RDKLogLevel;
             return TRUE;
         }
 #endif
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_DSLAgent_LogLevel",strlen("X_RDKCENTRAL-COM_DSLAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = DSLAGENT_RDKLogLevel;
             return TRUE;
         }
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_XTMAgent_LogLevel",strlen("X_RDKCENTRAL-COM_XTMAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = XTMAGENT_RDKLogLevel;
             return TRUE;
         }	
-        if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
+        rc = strcmp_s("X_RDKCENTRAL-COM_VLANAgent_LogLevel",strlen("X_RDKCENTRAL-COM_VLANAgent_LogLevel"),ParamName,&ind);
+        ERR_CHK(rc);
+        if ((!ind) && (rc == EOK))
         {
             *puLong  = VLANAGENT_RDKLogLevel;
             return TRUE;
@@ -660,7 +677,7 @@ LogAgent_SetParamUlongValue
     int     ind      = -1;
 	/*loglevel is a sample parameter. Need to be removed. Changed for RDKB-4800*/
 /*
-	if( AnscEqualString(ParamName, "loglevel", TRUE))
+	if (strcmp(ParamName, "loglevel") == 0)
 	{
 		//printf(" LogAgent_SetParamValues : loglevel \n");
 		return TRUE;
@@ -1188,7 +1205,9 @@ LogAgent_SetParamUlongValue
 #endif /* _HUB4_PRODUCT_REQ_ */
 
 #if defined(FEATURE_RDKB_WAN_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANManager_LogLevel",strlen("X_RDKCENTRAL-COM_VLANManager_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         VLANMANAGER_RDKLogLevel = uValue;
@@ -1209,7 +1228,9 @@ LogAgent_SetParamUlongValue
     }
 
 #if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XDSLManager_LogLevel",strlen("X_RDKCENTRAL-COM_XDSLManager_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         XDSLManager_RDKLogLevel = uValue;
@@ -1229,7 +1250,9 @@ LogAgent_SetParamUlongValue
         return TRUE;
     }
 
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PppManager_LogLevel",strlen("X_RDKCENTRAL-COM_PppManager_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         PPPMANAGER_RDKLogLevel = uValue;
@@ -1251,7 +1274,9 @@ LogAgent_SetParamUlongValue
 #endif
 
 #if defined(FEATURE_RDKB_TELCOVOICE_MANAGER)
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel",strlen("X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         TELCOVOICEMANAGER_RDKLogLevel = uValue;
@@ -1274,7 +1299,9 @@ LogAgent_SetParamUlongValue
 #endif
 
 #if defined (FEATURE_RDKB_FWUPGRADE_MANAGER)
-   if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", TRUE))
+    rc = strcmp_s("_RDKCENTRAL-COM_FwUpgradeManager_LogLevel",strlen("_RDKCENTRAL-COM_FwUpgradeManager_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         FWUPGRADEMGR_RDKLogLevel = uValue;
@@ -1294,7 +1321,9 @@ LogAgent_SetParamUlongValue
         return TRUE;
     }
 #endif
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_DSLAgent_LogLevel",strlen("X_RDKCENTRAL-COM_DSLAgent_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         DSLAGENT_RDKLogLevel = uValue;
@@ -1313,7 +1342,9 @@ LogAgent_SetParamUlongValue
         SendSignal(DSLAGENT_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XTMAgent_LogLevel",strlen("X_RDKCENTRAL-COM_XTMAgent_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         XTMAGENT_RDKLogLevel = uValue;
@@ -1332,7 +1363,9 @@ LogAgent_SetParamUlongValue
         SendSignal(XTMAGENT_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANAgent_LogLevel",strlen("X_RDKCENTRAL-COM_VLANAgent_LogLevel"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8]={ 0 };
         VLANAGENT_RDKLogLevel = uValue;
@@ -1879,19 +1912,25 @@ LogAgent_GetParamBoolValue
         return TRUE;
     }
 #if defined (FEATURE_RDKB_WAN_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_VLANManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = VLANMANAGER_RDKLogEnable;
         return TRUE;
     }
 
 #if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XDSLManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_XDSLManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = XDSLManager_RDKLogEnable;
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PppManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_PppManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = PPPMANAGER_RDKLogEnable;
         return TRUE;
@@ -1899,7 +1938,9 @@ LogAgent_GetParamBoolValue
 #endif
 
 #if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = TELCOVOICEMANAGER_RDKLogEnable;
         return TRUE;
@@ -1908,23 +1949,31 @@ LogAgent_GetParamBoolValue
 #endif
 
 #if defined (FEATURE_FWUPGRADE_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = FWUPGRADEMGR_RDKLogEnable;
         return TRUE;
     }
 #endif
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_DSLAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_DSLAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = DSLAGENT_RDKLogEnable;
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XTMAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_XTMAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = XTMAGENT_RDKLogEnable;
         return TRUE;
     }    
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_VLANAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         *pBool  = VLANAGENT_RDKLogEnable;
         return TRUE;
@@ -2398,7 +2447,9 @@ LogAgent_SetParamBoolValue
 #endif /* _HUB4_PRODUCT_REQ_ */
 
 #if defined (FEATURE_RDKB_WAN_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_VLANManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         VLANMANAGER_RDKLogEnable = bValue;
@@ -2419,7 +2470,9 @@ LogAgent_SetParamBoolValue
     }
 
 #if defined (FEATURE_RDKB_XDSL_PPP_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XDSLManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_XDSLManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         XDSLManager_RDKLogEnable = bValue;
@@ -2438,7 +2491,9 @@ LogAgent_SetParamBoolValue
         SendSignal(XDSLMANAGER_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_PppManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_PppManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         PPPMANAGER_RDKLogEnable = bValue;
@@ -2460,7 +2515,9 @@ LogAgent_SetParamBoolValue
 #endif
 
 #if defined (FEATURE_RDKB_TELCOVOICE_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         TELCOVOICEMANAGER_RDKLogEnable = bValue;
@@ -2483,7 +2540,9 @@ LogAgent_SetParamBoolValue
 #endif
 
 #if defined (FEATURE_RDKB_FWUPGRADE_MANAGER)
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable",strlen("X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         FWUPGRADEMGR_RDKLogEnable = bValue;
@@ -2503,7 +2562,9 @@ LogAgent_SetParamBoolValue
         return TRUE;
     }
 #endif
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_DSLAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_DSLAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         DSLAGENT_RDKLogEnable = bValue;
@@ -2522,7 +2583,9 @@ LogAgent_SetParamBoolValue
         SendSignal(DSLAGENT_PROC_NAME);
         return TRUE;
     }
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", TRUE))
+    rc = strcmp_s("X_RDKCENTRAL-COM_XTMAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_XTMAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         XTMAGENT_RDKLogEnable = bValue;
@@ -2540,8 +2603,10 @@ LogAgent_SetParamBoolValue
         }
         SendSignal(XTMAGENT_PROC_NAME);
         return TRUE;
-    }    
-    if (AnscEqualString(ParamName, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", TRUE))
+    }
+    rc = strcmp_s("X_RDKCENTRAL-COM_VLANAgent_LoggerEnable",strlen("X_RDKCENTRAL-COM_VLANAgent_LoggerEnable"),ParamName,&ind);
+    ERR_CHK(rc);
+    if ((!ind) && (rc == EOK))
     {
         char buf[8];
         VLANAGENT_RDKLogEnable = bValue;
