@@ -39,9 +39,7 @@
 #include "ansc_platform.h"
 #include "slap_definitions.h"
 
-#ifndef WIN32
 #include "ccsp_message_bus.h"
-#endif
 
 #include "ccsp_base_api.h"
 

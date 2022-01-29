@@ -37,10 +37,8 @@
 #include <execinfo.h>
 #endif
 #endif
-#ifdef _ANSC_LINUX
 #include <semaphore.h>
 #include <fcntl.h>
-#endif
 #include "ssp_global.h"
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
@@ -52,9 +50,7 @@
 extern char*                                pComponentName;
 char                                        g_Subsystem[MAX_SUBSYSTEM_SIZE]         = {0};
 
-#ifdef _ANSC_LINUX
     sem_t *sem;
-#endif
 
 int  cmd_dispatch(int  command)
 {
@@ -62,7 +58,6 @@ int  cmd_dispatch(int  command)
     {
         case    'e' :
 
-#ifdef _ANSC_LINUX
             CcspTraceInfo(("Connect to bus daemon...\n"));
 
             {
@@ -83,7 +78,6 @@ int  cmd_dispatch(int  command)
                         CCSP_COMPONENT_PATH_LOGAGENT
                     );
             }
-#endif
 
             ssp_create();
             ssp_engage();
@@ -140,7 +134,6 @@ static void _print_stack_backtrace(void)
 #endif
 }
 
-#if defined(_ANSC_LINUX)
 static void daemonize(void) {
 
        /* initialize semaphores for shared processes */
@@ -230,7 +223,6 @@ void sig_handler(int sig)
 
 }
 
-#endif
 void ReadLogInfo()
 {
  
@@ -559,19 +551,6 @@ int main(int argc, char* argv[])
 
     pComponentName          = CCSP_COMPONENT_NAME_LOGAGENT;
 
-#if  defined(_ANSC_WINDOWSNT)
-
-    AnscStartupSocketWrapper(NULL);
-
-    cmd_dispatch('e');
-
-    while ( cmdChar != 'q' )
-    {
-        cmdChar = getchar();
-
-        cmd_dispatch(cmdChar);
-    }
-#elif defined(_ANSC_LINUX)
     if ( bRunAsDaemon ) 
     {
         daemonize();
@@ -643,7 +622,6 @@ int main(int argc, char* argv[])
         }
     }
 
-#endif
 	err = Cdm_Term();
 	if (err != CCSP_SUCCESS)
 	{

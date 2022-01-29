@@ -45,7 +45,6 @@ extern char                 g_Subsystem[32];
 extern ANSC_HANDLE          g_MessageBusHandle_Irep; 
 extern char                 g_SubSysPrefix_Irep[32];
 
-#ifdef _ANSC_LINUX
 DBusHandlerResult
 CcspComp_path_message_func
     (
@@ -179,7 +178,6 @@ ssp_Mbi_MessageBusEngage
 
 }
 
-#endif
 
 int
 ssp_Mbi_Initialize
