@@ -691,20 +691,13 @@ LogAgent_SetParamUlongValue
 	{
 		if ( RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					RDKLogLevel = uValue;
-				}
+				RDKLogLevel = uValue;
 			}          
 		}
 		return TRUE;
@@ -715,20 +708,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (TR69_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_TR69_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					TR69_RDKLogLevel = uValue;
-				}
+				TR69_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(TR069_PROC_NAME);
@@ -740,20 +726,13 @@ LogAgent_SetParamUlongValue
         {
 		if (PAM_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_PAM_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					PAM_RDKLogLevel = uValue;
-				}
+				PAM_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(PAM_PROC_NAME);
@@ -765,20 +744,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (PSM_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_PSM_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					PSM_RDKLogLevel = uValue;
-				}
+				PSM_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(PSM_PROC_NAME);
@@ -790,20 +762,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (MTA_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_MTA_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					MTA_RDKLogLevel = uValue;
-				}
+				MTA_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(MTA_PROC_NAME);
@@ -815,20 +780,13 @@ LogAgent_SetParamUlongValue
         {
 		if (CM_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_CM_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_CM_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					CM_RDKLogLevel = uValue;
-				}
+				CM_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(CM_PROC_NAME);
@@ -840,20 +798,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (WiFi_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_WiFi_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					WiFi_RDKLogLevel = uValue;
-				}
+				WiFi_RDKLogLevel = uValue;
 			}
 		}
 		
@@ -870,20 +821,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (CR_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_CR_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_CR_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					CR_RDKLogLevel = uValue;
-				}
+				CR_RDKLogLevel = uValue;
 			}
 		}
 		return TRUE;
@@ -897,22 +841,14 @@ LogAgent_SetParamUlongValue
 		if (Harvester_RDKLogLevel != uValue)
 		{
 			printf("Setting Harvester_RDKLogLevel to %d\n",Harvester_RDKLogLevel);
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_Harvester_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 				printf("syscfg_set failed\n");
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-					printf("syscfg_commit failed\n");
-				}
-				else
-				{
-					Harvester_RDKLogLevel = uValue;
-				}
+				Harvester_RDKLogLevel = uValue;
 			} 
 		}
 		return TRUE;
@@ -923,20 +859,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (NOTIFY_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", uValue) != 0) 
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_NotifyComp_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else 
 			{
-				if (syscfg_commit() != 0) 
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					NOTIFY_RDKLogLevel = uValue;
-				}
+				NOTIFY_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(NOTIFY_PROC_NAME);
@@ -948,20 +877,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (PWRMGR_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", uValue) != 0)
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_PowerMgr_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else
 			{
-				if (syscfg_commit() != 0)
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					PWRMGR_RDKLogLevel = uValue;
-				}
+				PWRMGR_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(PWRMGR_PROC_NAME);
@@ -973,20 +895,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (FSC_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", uValue) != 0)
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_FSC_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else
 			{
-				if (syscfg_commit() != 0)
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					FSC_RDKLogLevel = uValue;
-				}
+				FSC_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(FSC_PROC_NAME);
@@ -998,20 +913,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (ETHAGENT_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", uValue) != 0)
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_EthAgent_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else
 			{
-				if (syscfg_commit() != 0)
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					ETHAGENT_RDKLogLevel = uValue;
-				}
+				ETHAGENT_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(ETHAGENT_PROC_NAME);
@@ -1023,20 +931,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (MESH_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", uValue) != 0)
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_Mesh_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else
 			{
-				if (syscfg_commit() != 0)
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					MESH_RDKLogLevel = uValue;
-				}
+				MESH_RDKLogLevel = uValue;
 			}
 		}
 		SendSignal(MESH_PROC_NAME);
@@ -1048,20 +949,13 @@ LogAgent_SetParamUlongValue
 	{
 		if (MeshService_RDKLogLevel != uValue)
 		{
-			if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", uValue) != 0)
+			if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_MeshService_LogLevel", uValue) != 0)
 			{
 				AnscTraceWarning(("syscfg_set failed\n"));
 			}
 			else
 			{
-				if (syscfg_commit() != 0)
-				{
-					AnscTraceWarning(("syscfg_commit failed\n"));
-				}
-				else
-				{
-					MeshService_RDKLogLevel = uValue;
-				}
+				MeshService_RDKLogLevel = uValue;
 			}
 		}
 		return TRUE;
@@ -1073,16 +967,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         TELCOVOIPAGENT_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(TELCOVOIPAGENT_PROC_NAME);
         return TRUE;
@@ -1095,16 +982,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         VLANMANAGER_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_VLANManager_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(VLANMANAGER_PROC_NAME);
         return TRUE;
@@ -1116,16 +996,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         XDSLManager_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_XDSLManager_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(XDSLMANAGER_PROC_NAME);
         return TRUE;
@@ -1136,16 +1009,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         PPPMANAGER_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_PppManager_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(PPPMANAGER_PROC_NAME);
         return TRUE;
@@ -1158,16 +1024,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         TELCOVOICEMANAGER_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(TELCOVOICEMANAGER_PROC_NAME);
         return TRUE;
@@ -1181,16 +1040,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         FWUPGRADEMGR_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(FWUPGRADEMANAGER_PROC_NAME);
         return TRUE;
@@ -1201,16 +1053,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         DSLAGENT_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_DSLAgent_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(DSLAGENT_PROC_NAME);
         return TRUE;
@@ -1220,16 +1065,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         XTMAGENT_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_XTMAgent_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(XTMAGENT_PROC_NAME);
         return TRUE;
@@ -1239,16 +1077,9 @@ LogAgent_SetParamUlongValue
     if ((!ind) && (rc == EOK))
     {
         VLANAGENT_RDKLogLevel = uValue;
-        if (syscfg_set_u(NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", uValue) != 0)
+        if (syscfg_set_u_commit(NULL, "X_RDKCENTRAL-COM_VLANAgent_LogLevel", uValue) != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(VLANAGENT_PROC_NAME);
         return TRUE;
@@ -1868,16 +1699,9 @@ LogAgent_SetParamBoolValue
     {
 		RDKLogEnable = bValue;
 
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_LoggerEnable", bValue ? "1" : "0") != 0) 
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-		     if (syscfg_commit() != 0) 
-			 {
-		         AnscTraceWarning(("syscfg_commit failed\n"));
-		     }
 		}
 		SendSignal(TR069_PROC_NAME);
 		SW_Dealy();
@@ -1910,16 +1734,9 @@ LogAgent_SetParamBoolValue
     {
 		TR69_RDKLogEnable = bValue;
 
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TR69_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_TR69_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			 if (syscfg_commit() != 0) 
-			 {
-				 AnscTraceWarning(("syscfg_commit failed\n"));
-			 }
 		}
 		SendSignal(TR069_PROC_NAME);
 		return TRUE;
@@ -1929,16 +1746,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		PAM_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PAM_LoggerEnable", bValue ? "1" : "0") != 0) 
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_PAM_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			 if (syscfg_commit() != 0) 
-			 {
-				 AnscTraceWarning(("syscfg_commit failed\n"));
-			 }
 		}
 		SendSignal(PAM_PROC_NAME);
 		return TRUE;
@@ -1948,16 +1758,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
 	{
 		PSM_RDKLogEnable = bValue;
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PSM_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_PSM_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 			 AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-			 	AnscTraceWarning(("syscfg_commit failed\n"));
-			}
 		}
 		SendSignal(PSM_PROC_NAME);
 		return TRUE;
@@ -1967,16 +1770,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		MTA_RDKLogEnable = bValue;
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MTA_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_MTA_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 			 AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-				 AnscTraceWarning(("syscfg_commit failed\n"));
-			}
 		}
 		SendSignal(MTA_PROC_NAME);
 		return TRUE;
@@ -1986,16 +1782,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		CM_RDKLogEnable = bValue;
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CM_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_CM_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
-			}
 		}
 		SendSignal(CM_PROC_NAME);
 		return TRUE;
@@ -2005,16 +1794,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		WiFi_RDKLogEnable = bValue;
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_WiFi_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 			AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-				AnscTraceWarning(("syscfg_commit failed\n"));
-			}
 		}
 		#if defined(_COSA_INTEL_XB3_ARM_)
 		SendSignal_wifi();
@@ -2030,16 +1812,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		CR_RDKLogEnable = bValue;
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_CR_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_CR_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 		 	AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-			 	AnscTraceWarning(("syscfg_commit failed\n"));
-			}
 		}
 		return TRUE;
     }
@@ -2049,18 +1824,10 @@ LogAgent_SetParamBoolValue
     {
 		Harvester_RDKLogEnable = bValue;
 		printf("$$$$ Harvester_RDKLogEnable = %d\n",Harvester_RDKLogEnable);
-		if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", bValue ? "1" : "0") != 0) 
+		if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_Harvester_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
 		 	AnscTraceWarning(("syscfg_set failed\n"));
 			printf("syscfg_set failed\n");
-		}
-		else 
-		{
-			if (syscfg_commit() != 0) 
-			{
-			 	AnscTraceWarning(("syscfg_commit failed\n"));
-				printf("syscfg_commit failed\n");
-			}
 		}
 		return TRUE;
     }
@@ -2069,16 +1836,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
 		NOTIFY_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", bValue ? "1" : "0") != 0) 
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_NotifyComp_LoggerEnable", bValue ? "1" : "0") != 0)
 		{
              AnscTraceWarning(("syscfg_set failed\n"));
-		}
-		else 
-		{
-			 if (syscfg_commit() != 0) 
-			 {
-				 AnscTraceWarning(("syscfg_commit failed\n"));
-			 }
 		}
 		SendSignal(NOTIFY_PROC_NAME);
 		return TRUE;
@@ -2089,16 +1849,9 @@ LogAgent_SetParamBoolValue
 
     {
         PWRMGR_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_PowerMgr_LoggerEnable", bValue ? "1" : "0") != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-             if (syscfg_commit() != 0)
-             {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-             }
         }
         SendSignal(PWRMGR_PROC_NAME);
         return TRUE;
@@ -2108,16 +1861,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         FSC_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_FSC_LoggerEnable", bValue ? "1" : "0") != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-             if (syscfg_commit() != 0)
-             {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-             }
         }
         SendSignal(FSC_PROC_NAME);
         return TRUE;
@@ -2127,16 +1873,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         MESH_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_Mesh_LoggerEnable", bValue ? "1" : "0") != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-             if (syscfg_commit() != 0)
-             {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-             }
         }
         SendSignal(MESH_PROC_NAME);
         return TRUE;
@@ -2146,16 +1885,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         MeshService_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_MeshService_LoggerEnable", bValue ? "1" : "0") != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-             if (syscfg_commit() != 0)
-             {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-             }
         }
         return TRUE;
     }
@@ -2165,16 +1897,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         ETHAGENT_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_EthAgent_LoggerEnable", bValue ? "1" : "0") != 0)
         {
              AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-             if (syscfg_commit() != 0)
-             {
-                 AnscTraceWarning(("syscfg_commit failed\n"));
-             }
         }
         SendSignal(ETHAGENT_PROC_NAME);
         return TRUE;
@@ -2186,16 +1911,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         TELCOVOIPAGENT_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_TelcoVOIPAgent_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(TELCOVOIPAGENT_PROC_NAME);
         return TRUE;
@@ -2208,16 +1926,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         VLANMANAGER_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_VLANManager_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(VLANMANAGER_PROC_NAME);
         return TRUE;
@@ -2229,16 +1940,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         XDSLManager_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_XDSLManager_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(XDSLMANAGER_PROC_NAME);
         return TRUE;
@@ -2248,16 +1952,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         PPPMANAGER_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_PppManager_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(PPPMANAGER_PROC_NAME);
         return TRUE;
@@ -2270,16 +1967,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         TELCOVOICEMANAGER_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_TelcoVOICEManager_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(TELCOVOICEMANAGER_PROC_NAME);
         return TRUE;
@@ -2293,16 +1983,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         FWUPGRADEMGR_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_FwUpgradeManager_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(FWUPGRADEMANAGER_PROC_NAME);
         return TRUE;
@@ -2313,16 +1996,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         DSLAGENT_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_DSLAgent_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(DSLAGENT_PROC_NAME);
         return TRUE;
@@ -2332,16 +2008,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         XTMAGENT_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_XTMAgent_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(XTMAGENT_PROC_NAME);
         return TRUE;
@@ -2351,16 +2020,9 @@ LogAgent_SetParamBoolValue
     if ((!ind) && (rc == EOK))
     {
         VLANAGENT_RDKLogEnable = bValue;
-        if (syscfg_set(NULL, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", bValue ? "1" : "0") != 0)
+        if (syscfg_set_commit(NULL, "X_RDKCENTRAL-COM_VLANAgent_LoggerEnable", bValue ? "1" : "0") != 0)
         {
             AnscTraceWarning(("syscfg_set failed\n"));
-        }
-        else
-        {
-            if (syscfg_commit() != 0)
-            {
-                AnscTraceWarning(("syscfg_commit failed\n"));
-            }
         }
         SendSignal(VLANAGENT_PROC_NAME);
         return TRUE;
